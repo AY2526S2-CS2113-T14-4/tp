@@ -1,9 +1,6 @@
 # About us
 
-Display | Name | Github Profile | Portfolio 
---------|:----:|:--------------:|:---------:
-![](https://via.placeholder.com/100.png?text=Photo) | John Doe | [Github](https://github.com/) | [Portfolio](docs/team/johndoe.md)
-![](https://via.placeholder.com/100.png?text=Photo) | Don Joe | [Github](https://github.com/) | [Portfolio](docs/team/johndoe.md)
-![](https://via.placeholder.com/100.png?text=Photo) | Ron John | [Github](https://github.com/) | [Portfolio](docs/team/johndoe.md)
-![](https://via.placeholder.com/100.png?text=Photo) | John Roe | [Github](https://github.com/) | [Portfolio](docs/team/johndoe.md)
-![](https://via.placeholder.com/100.png?text=Photo) | Don Roe | [Github](https://github.com/) | [Portfolio](docs/team/johndoe.md)
+Display |    Name    | Github Profile | Portfolio 
+--------|:----------:|:--------------:|:---------:
+![](https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS6xXE-M_78-mN-1unRPqIMw63vgsWmjmN-6Q&s) | Cedric Tan |   [Github](https://github.com/CedricTan24/tp)   | [Portfolio](docs/team/cedrictan.md)
+
