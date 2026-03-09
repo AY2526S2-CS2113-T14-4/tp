@@ -19,6 +19,8 @@ public class Parser {
             parseListCommand(list, ui);
         } else if (input.startsWith("delete ")) {
             parseDeleteCommand(input.substring("delete ".length()).trim(), list, ui);
+        } else if (input.startsWith("summary")) {
+            parseSummaryCommand(input, list, ui);
         } else if (input.startsWith("help")) {
             ui.showHelp();
         } else {
@@ -129,6 +131,57 @@ public class Parser {
         } catch (DateTimeParseException e) {
             ui.showMessage("Invalid date format — expected yyyy-MM-dd. Using today's date.");
             return LocalDate.now();
+        }
+    }
+
+    /**
+     * Calculates and displays the summary of transactions based on the requested category.
+     *
+     * @param input The full user input string (e.g., "summary all" or "summary food").
+     * @param list  The current list of transactions.
+     * @param ui    The ui instance to display results.
+     */
+    private void parseSummaryCommand(String input, TransactionList list, Ui ui) {
+        String[] parts = input.split(" ", 2);
+        String summaryType = parts.length > 1 ? parts[1].trim().toLowerCase() : "all";
+
+        if (list.size() == 0) {
+            ui.showMessage("No transactions found to summarise.");
+            return;
+        }
+
+        double totalExpense = 0.0;
+        double totalIncome = 0.0;
+        double categoryTotal = 0.0;
+
+        for (int i = 0; i < list.size(); i++) {
+            Transaction transaction = list.get(i);
+
+            if (transaction.getType().equals("expense")) {
+                totalExpense += transaction.getAmount();
+            } else if (transaction.getType().equals("income")) {
+                totalIncome += transaction.getAmount();
+            }
+
+            if (transaction.getCategory().equalsIgnoreCase(summaryType)) {
+                categoryTotal += transaction.getAmount();
+            }
+        }
+        switch (summaryType) {
+        case "all":
+            ui.showOverallSummary(totalIncome, totalExpense);
+            break;
+        case "outflow":
+        case "expense":
+            ui.showCategorySummary("Expenses", totalExpense);
+            break;
+        case "income":
+        case "inflow":
+            ui.showCategorySummary("Income", totalIncome);
+            break;
+        default:
+            ui.showCategorySummary("Category '" + summaryType + "'", categoryTotal);
+            break;
         }
     }
 }
