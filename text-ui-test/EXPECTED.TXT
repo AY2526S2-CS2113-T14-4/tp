@@ -32,4 +32,4 @@ Summary of all expenses or incomes: `summary [category]`
  - Category includes: `all`, `expense`, `outflow`
 Exiting the program: `exit`
 Enter a command: Unknown command.
-Enter a command:
+Enter a command: 
