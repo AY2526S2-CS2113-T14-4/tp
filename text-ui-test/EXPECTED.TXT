@@ -14,6 +14,11 @@ Enter a command: 1. [Expense] food $10.00 ({TODAY})
 3. [Expense] food "lunch" $10.00 (2025-03-01)
 4. [Expense] food $10.00 (2025-03-01)
 5. [Expense] food "lunch" $10.00 ({TODAY})
+Enter a command: ----- Overall Summary -----
+Total Income: $0.00
+Total Expense: $50.00
+Net Balance: $-50.00
+--------------------------
 Enter a command: Deleted: [Expense] food $10.00 ({TODAY})
 Enter a command: Deleted: [Expense] food "lunch" $10.00 ({TODAY})
 Enter a command: Deleted: [Expense] food "lunch" $10.00 (2025-03-01)
