@@ -1,5 +1,8 @@
 package seedu.duke;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeParseException;
+
 public class Parser {
 
     /**
@@ -27,16 +30,17 @@ public class Parser {
         String[] parts = args.split("/", 2);
 
         if (parts.length < 2) {
-            ui.showMessage("Invalid, try: add [category]/PRICE [desc/DESCRIPTION]");
+            ui.showMessage("Invalid, try: add [category]/PRICE [desc/DESCRIPTION] [d/YYYY-MM-DD]");
             return;
         }
 
         try {
             String category = parts[0].trim();
             String remainder = parts[1].trim();
-            String description = parseDescription(remainder);
             double amount = parseAmount(remainder);
-            Expense expense = new Expense(category, amount, description);
+            String description = parseDescription(remainder);
+            LocalDate date = parseDate(remainder, ui);
+            Expense expense = new Expense(category, amount, description, date);
             list.add(expense);
             ui.showMessage("Added: " + expense);
         } catch (NumberFormatException e) {
@@ -79,22 +83,52 @@ public class Parser {
         if (!remainder.contains(" desc/")) {
             return "";
         }
-        int start = remainder.indexOf(" desc/") + " desc/".length();
-        return remainder.substring(start).trim();
+        int descStart = remainder.indexOf(" desc/") + " desc/".length();
+        String afterDesc = remainder.substring(descStart).trim();
+        if (afterDesc.contains(" d/")) {
+            return afterDesc.substring(0, afterDesc.indexOf(" d/")).trim();
+        }
+        return afterDesc;
     }
 
     /**
      * Extracts the numeric amount from the add command remainder string.
-     * The amount is the token before any optional desc/ suffix.
+     * The amount is the token before any optional desc/ or d/ suffix.
      *
      * @param remainder The portion of input after the first slash, e.g. "10 desc/lunch".
      * @return The parsed amount as a double.
      * @throws NumberFormatException If the amount token cannot be parsed.
      */
     private double parseAmount(String remainder) {
-        if (remainder.contains(" desc/")) {
-            return Double.parseDouble(remainder.substring(0, remainder.indexOf(" desc/")).trim());
+        String amountToken = remainder;
+        if (amountToken.contains(" desc/")) {
+            amountToken = amountToken.substring(0, amountToken.indexOf(" desc/"));
+        } else if (amountToken.contains(" d/")) {
+            amountToken = amountToken.substring(0, amountToken.indexOf(" d/"));
         }
-        return Double.parseDouble(remainder.trim());
+        return Double.parseDouble(amountToken.trim());
+    }
+
+    /**
+     * Extracts the date from the add command remainder string.
+     * Returns today's date if the d/ token is absent.
+     * Shows an error message and returns today's date if the format is invalid.
+     *
+     * @param remainder The portion of input after the first slash.
+     * @param ui        The ui instance used to display error messages.
+     * @return The parsed LocalDate, or LocalDate.now() if absent or invalid.
+     */
+    private LocalDate parseDate(String remainder, Ui ui) {
+        if (!remainder.contains(" d/")) {
+            return LocalDate.now();
+        }
+        int dateStart = remainder.indexOf(" d/") + " d/".length();
+        String dateToken = remainder.substring(dateStart).trim().split(" ")[0];
+        try {
+            return LocalDate.parse(dateToken);
+        } catch (DateTimeParseException e) {
+            ui.showMessage("Invalid date format — expected yyyy-MM-dd. Using today's date.");
+            return LocalDate.now();
+        }
     }
 }

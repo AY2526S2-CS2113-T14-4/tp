@@ -1,1 +1,19 @@
 add food/10
+add food/10 desc/lunch
+add food/10 desc/lunch d/2025-03-01
+add food/10 d/2025-03-01
+add food/10 desc/lunch d/bad-date
+add food/notanumber
+add food/
+add food
+list
+delete 1
+delete 1
+delete 1
+delete 1
+delete 1
+delete 99
+delete notanumber
+help
+unknown
+exit
