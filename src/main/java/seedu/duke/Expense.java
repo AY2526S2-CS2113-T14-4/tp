@@ -5,6 +5,10 @@ public class Expense extends Transaction {
         super(category, amount);
     }
 
+    public Expense(String category, double amount, String description) {
+        super(category, amount, description);
+    }
+
     //not needed for now, can be used for specific type of category later
     @Override
     public String getType() {
@@ -13,6 +17,7 @@ public class Expense extends Transaction {
 
     @Override
     public String toString() {
-        return String.format("[Expense] %s $%.2f", category, amount); //$%.2f is floating point for 2dp
+        String descriptionSuffix = description.isEmpty() ? "" : " \"" + description + "\"";
+        return String.format("[Expense] %s%s $%.2f", category, descriptionSuffix, amount);
     }
 }

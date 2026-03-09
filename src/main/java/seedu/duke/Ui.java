@@ -14,12 +14,13 @@ public class Ui {
 
     public void showHelp() {
         System.out.println("Listing all current transactions: `list`");
-        System.out.println("Adding an expense: `add [category]/PRICE`\n" +
-                " - Category can be any user-initiated category for now.");
-        System.out.println("Adding an expense: `add income/PRICE`\n");
-        System.out.println("Deleting an expense or income:`delete [ENTRY INDEX]`");
-        System.out.println("Summary of all expenses or incomes: `summary [category]\n`" +
-                " - Category include: `all`, `expense`, `outflow`");
+        System.out.println("Adding an expense: `add [category]/PRICE [desc/DESCRIPTION]`\n"
+                + " - Category can be any user-initiated category for now.\n"
+                + " - desc/ is optional. Example: add food/10 desc/lunch");
+        System.out.println("Adding an income: `add income/PRICE`");
+        System.out.println("Deleting an expense or income: `delete [ENTRY INDEX]`");
+        System.out.println("Summary of all expenses or incomes: `summary [category]`\n"
+                + " - Category includes: `all`, `expense`, `outflow`");
         System.out.println("Exiting the program: `exit`");
     }
 
