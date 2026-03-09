@@ -10,7 +10,7 @@ public class TransactionList {
         transactions.add(t);
     }
 
-    //returns num of ransactions
+    //returns num of transactions
     public int size() {
         return transactions.size();
     }
@@ -18,5 +18,10 @@ public class TransactionList {
     //can be used for list command later to acquire a particular transaction
     public Transaction get(int i) {
         return transactions.get(i);
+    }
+
+    //removes a transaction from list
+    public Transaction remove(int i) {
+        return transactions.remove(i);
     }
 }
