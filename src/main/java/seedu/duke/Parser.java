@@ -45,11 +45,11 @@ public class Parser {
             if (category.equalsIgnoreCase("income")) {
                 Income income = new Income(category, amount, description, date);
                 list.add(income);
-                ui.showMessage("Added Income: " + income);
+                ui.showMessage("Added: " + income);
             } else {
                 Expense expense = new Expense(category, amount, description, date);
                 list.add(expense);
-                ui.showMessage("Added Expense: " + expense);
+                ui.showMessage("Added: " + expense);
             }
         } catch (NumberFormatException e) {
             ui.showMessage("Invalid price.");
