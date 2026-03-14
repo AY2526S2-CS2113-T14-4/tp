@@ -13,7 +13,7 @@ public class MoneyBagProMax {
 
         while (true) {
             String input = ui.readInput();
-            if (input.equals("exit")) {
+            if (input.equals("exit") || input.equals("q")) {
                 break;
             }
             parser.parse(input, list, ui);

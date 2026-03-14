@@ -62,4 +62,37 @@ class ParserTest {
         String expectedOutput = "No transactions found to summarise." + System.lineSeparator();
         assertEquals(expectedOutput, outContent.toString());
     }
+
+    @Test
+    public void parseFindCommand_keyword_printsMatchingTransactions() {
+        TransactionList list = new TransactionList();
+        Ui ui = new Ui();
+        Parser parser = new Parser();
+
+        list.add(new Expense("food", 10.50, "lunch", LocalDate.parse("2026-03-14")));
+        list.add(new Income("income", 50.00, "pocket money", LocalDate.parse("2026-03-15")));
+        list.add(new Expense("transport", 5.00, "bus to lunch", LocalDate.parse("2026-03-16")));
+
+        parser.parse("find lunch", list, ui);
+
+        String expectedOutput = "Found 2 matching transaction(s):" + System.lineSeparator() +
+                "1. [Expense] food \"lunch\" $10.50 (2026-03-14)" + System.lineSeparator() +
+                "3. [Expense] transport \"bus to lunch\" $5.00 (2026-03-16)" + System.lineSeparator();
+
+        assertEquals(expectedOutput, outContent.toString());
+    }
+
+    @Test
+    public void parseFindCommand_nonExistingKeyword_printsNoMatch() {
+
+        TransactionList list = new TransactionList();
+        Ui ui = new Ui();
+        Parser parser = new Parser();
+
+        list.add(new Expense("food", 10.50, "lunch", LocalDate.parse("2026-03-14")));
+
+        parser.parse("find elephant", list, ui);
+        String expectedOutput = "No matching transactions found for: elephant" + System.lineSeparator();
+        assertEquals(expectedOutput, outContent.toString());
+    }
 }

@@ -2,6 +2,8 @@ package seedu.duke;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
+import java.util.List;
+import java.util.stream.IntStream;
 
 public class Parser {
 
@@ -21,6 +23,8 @@ public class Parser {
             parseDeleteCommand(input.substring("delete ".length()).trim(), list, ui);
         } else if (input.startsWith("summary")) {
             parseSummaryCommand(input, list, ui);
+        } else if (input.startsWith("find")) {
+            parseFindCommand(input.substring(5).trim(), list, ui);
         } else if (input.startsWith("help")) {
             ui.showHelp();
         } else {
@@ -151,6 +155,9 @@ public class Parser {
      * @param ui    The ui instance to display results.
      */
     private void parseSummaryCommand(String input, TransactionList list, Ui ui) {
+        assert input != null;
+        assert list != null;
+
         String[] parts = input.split(" ", 2);
         String summaryType = parts.length > 1 ? parts[1].trim().toLowerCase() : "all";
 
@@ -192,5 +199,45 @@ public class Parser {
             ui.showCategorySummary("Category '" + summaryType + "'", categoryTotal);
             break;
         }
+    }
+
+    /**
+     * Searches for transactions that contain the given keyword in their category or description.
+     * Displays matching transactions with their original list indices using Java Streams.
+     *
+     * @param keyword The search term provided by the user.
+     * @param list    The current list of transactions.
+     * @param ui      The ui instance to display results.
+     */
+    private void parseFindCommand(String keyword, TransactionList list, Ui ui) {
+        assert keyword != null;
+        assert list != null;
+
+        if (keyword.isEmpty()) {
+            ui.showMessage("Please provide a keyword to seach for.");
+            return;
+        }
+
+        String searchKeyword = keyword.toLowerCase();
+
+        // Use IntStream to iterate through indices so we preserve the original list numbers
+        List<String> matchedTransactions = IntStream.range(0, list.size())
+                .filter(i -> {
+                    Transaction t = list.get(i);
+                    boolean matchesDescription = t.getDescription().toLowerCase().contains(searchKeyword);
+                    boolean matchesCategory = t.getCategory().toLowerCase().contains(searchKeyword);
+                    boolean matchesDate = t.getDate().toString().contains(searchKeyword);
+                    return matchesDescription || matchesCategory || matchesDate;
+                })
+                .mapToObj(i -> (i + 1) + ". " + list.get(i).toString())
+                .toList();
+
+        if (matchedTransactions.isEmpty()) {
+            ui.showMessage("No matching transactions found for: " + keyword);
+        } else {
+            ui.showMessage("Found " + matchedTransactions.size() + " matching transaction(s):");
+            matchedTransactions.forEach(ui::showMessage);
+        }
+
     }
 }

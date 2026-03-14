@@ -13,18 +13,39 @@ public class Ui {
     }
 
     public void showHelp() {
-        System.out.println("Listing all current transactions: `list`");
-        System.out.println("Adding an expense: `add [category]/PRICE [desc/DESCRIPTION] [d/YYYY-MM-DD]`\n"
-                + " - desc/ and d/ are optional.\n"
-                + " - Date defaults to today if omitted.\n"
-                + " - Valid categories include: `food`, `transport`, `utilities`, "
-                + "`education`, `rent`, `medical`, `misc`\n"
-                + " - Example: add food/10 desc/lunch d/2025-03-01");
-        System.out.println("Adding an income: `add income/PRICE`");
-        System.out.println("Deleting an expense or income: `delete [ENTRY INDEX]`");
-        System.out.println("Summary of all expenses or incomes: `summary [category]`\n"
-                + " - Category includes: `all`, `expense`, `outflow`");
-        System.out.println("Exiting the program: `exit`");
+        String separator = "=".repeat(60);
+        String helpMessage = """
+                %s
+                                  MoneyBagProMax Help Menu
+                %s
+                1. Add Expense : `add [category]/PRICE [desc/DESCRIPTION] [d/YYYY-MM-DD]`
+                                 - desc/ and d/ are optional.
+                                 - Date defaults to today if omitted.
+                                 - Valid categories: `food`, `transport`, `utilities`,
+                                   `education`, `rent`, `medical`, `misc`
+                                 - Example: add food/10 desc/lunch d/2025-03-01
+                2. Add Income  : `add income/PRICE [desc/DESCRIPTION] [d/YYYY-MM-DD]`
+                                 - desc/ and d/ are optional.
+                                 - Example: add income/500 desc/allowance
+                3. List        : `list`
+                                 - Lists all current transactions in your app.
+                4. Find        : `find [KEYWORD]`
+                                 - Searches for transactions containing the keyword
+                                   in their category, description or date.
+                                 - Example: find lunch
+                                 - Example: find 2026-03 
+                5. Summary     : `summary [category]`
+                                 - Shows overall totals or specific category totals.
+                                 - Valid types: `all`, `expense`, `income`, or specific categories.
+                                 - Example: summary all 
+                6. Delete      : `delete [ENTRY INDEX]`
+                                 - Deletes a transaction using its number from the `list`.
+                                 - Example: delete 3 
+                7. Exit        : `exit`
+                                 - Exits the program.
+                %s""".formatted(separator, separator, separator);
+
+        System.out.println(helpMessage);
     }
 
     public void showWelcomeMessage() {
