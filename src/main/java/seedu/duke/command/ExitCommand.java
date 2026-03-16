@@ -1,6 +1,5 @@
 package seedu.duke.command;
 
-import seedu.duke.MoneyBagProMaxException;
 import seedu.duke.transactionlist.TransactionList;
 import seedu.duke.ui.Ui;
 
