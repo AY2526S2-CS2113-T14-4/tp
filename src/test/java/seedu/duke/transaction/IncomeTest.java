@@ -39,7 +39,8 @@ public class IncomeTest {
         Parser parser = new Parser();
 
         // Input simulates adding income
-        parser.parse("add income/50.00 desc/Salary d/2023-10-01", list, ui);
+        Command command = parser.parse("add income/50.00 desc/Salary d/2023-10-01");
+        command.execute(list, ui);
 
         assertEquals(1, list.size(), "List should have 1 transaction");
 
@@ -57,14 +58,15 @@ public class IncomeTest {
 
         list.add(new Income("salary", 5000.00, "monthly", LocalDate.now()));
 
-        parser.parse("summary", list, ui);
+        Command command = parser.parse("summary");
+        command.execute(list, ui);
 
         // Verify that Total Expense is $0.00 and Net Balance matches Income
-        String expectedOutput = "----- Overall Summary -----" + System.lineSeparator() +
+        String expectedOutput = "===== Overall Summary =====" + System.lineSeparator() +
                 "Total Income: $5000.00" + System.lineSeparator() +
                 "Total Expense: $0.00" + System.lineSeparator() +
                 "Net Balance: $5000.00" + System.lineSeparator() +
-                "--------------------------" + System.lineSeparator();
+                "===========================" + System.lineSeparator();
 
         assertEquals(expectedOutput, outContent.toString());
     }
