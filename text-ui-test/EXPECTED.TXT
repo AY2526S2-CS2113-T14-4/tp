@@ -4,28 +4,26 @@ Enter a command: Added: [Expense] food $10.00 ({TODAY})
 Enter a command: Added: [Expense] food "lunch" $10.00 ({TODAY})
 Enter a command: Added: [Expense] food "lunch" $10.00 (2025-03-01)
 Enter a command: Added: [Expense] food $10.00 (2025-03-01)
-Enter a command: Invalid date format — expected yyyy-MM-dd. Using today's date.
-Added: [Expense] food "lunch" $10.00 ({TODAY})
-Enter a command: Invalid price.
-Enter a command: Invalid price.
-Enter a command: Invalid, try: add [category]/PRICE [desc/DESCRIPTION] [d/YYYY-MM-DD]
+Enter a command: [ERROR!] Invalid date format — expected yyyy-MM-dd. Using today's date.
+Enter a command: [ERROR!] Invalid price.
+Enter a command: [ERROR!] Invalid price.
+Enter a command: [ERROR!] Invalid, try: add [category]/PRICE [desc/DESCRIPTION] [d/YYYY-MM-DD]
 Enter a command: 1. [Expense] food $10.00 ({TODAY})
 2. [Expense] food "lunch" $10.00 ({TODAY})
 3. [Expense] food "lunch" $10.00 (2025-03-01)
 4. [Expense] food $10.00 (2025-03-01)
-5. [Expense] food "lunch" $10.00 ({TODAY})
-Enter a command: ----- Overall Summary -----
+Enter a command: ===== Overall Summary =====
 Total Income: $0.00
-Total Expense: $50.00
-Net Balance: $-50.00
---------------------------
+Total Expense: $40.00
+Net Balance: $-40.00
+===========================
 Enter a command: Deleted: [Expense] food $10.00 ({TODAY})
 Enter a command: Deleted: [Expense] food "lunch" $10.00 ({TODAY})
 Enter a command: Deleted: [Expense] food "lunch" $10.00 (2025-03-01)
 Enter a command: Deleted: [Expense] food $10.00 (2025-03-01)
-Enter a command: Deleted: [Expense] food "lunch" $10.00 ({TODAY})
-Enter a command: Invalid transaction index.
-Enter a command: Invalid, try: delete INDEX
+Enter a command: [ERROR!] Invalid transaction index. Please provide a number between 1 and 0.
+Enter a command: [ERROR!] Invalid transaction index. Please provide a number between 1 and 0.
+Enter a command: [ERROR!] Invalid, try: delete INDEX
 Enter a command: ============================================================
                   MoneyBagProMax Help Menu
 ============================================================
@@ -55,5 +53,5 @@ Enter a command: ============================================================
 7. Exit        : `exit`
                  - Exits the program.
 ============================================================
-Enter a command: Unknown command.
-Enter a command: 
+Enter a command: [ERROR!] Unknown command. Type `help` to see the list of available commands.
+Enter a command: Goodbye. Thank you for investing in MoneyBagProMax.
