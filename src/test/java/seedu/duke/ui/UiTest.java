@@ -1,9 +1,8 @@
-package seedu.duke;
+package seedu.duke.ui;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import seedu.duke.ui.Ui;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;

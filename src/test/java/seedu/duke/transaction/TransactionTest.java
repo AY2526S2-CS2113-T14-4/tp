@@ -1,4 +1,4 @@
-package seedu.duke;
+package seedu.duke.transaction;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -6,8 +6,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import java.time.LocalDate;
 
 import org.junit.jupiter.api.Test;
-import seedu.duke.transaction.Expense;
-import seedu.duke.transaction.Income;
 
 class TransactionTest {
 

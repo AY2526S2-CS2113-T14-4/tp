@@ -1,10 +1,11 @@
-package seedu.duke;
+package seedu.duke.transaction;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import seedu.duke.MoneyBagProMaxException;
+import seedu.duke.command.Command;
 import seedu.duke.parser.Parser;
-import seedu.duke.transaction.Income;
 import seedu.duke.transactionlist.TransactionList;
 import seedu.duke.ui.Ui;
 
