@@ -13,6 +13,10 @@ public abstract class Transaction {
     protected final LocalDate date;
 
     public Transaction(String category, double amount, String description, LocalDate date) {
+        assert category != null && !category.isEmpty() : "Category should not be null or empty";
+        assert amount > 0 : "Amount should be positive";
+        assert description != null : "Description should not be null";
+        assert date != null : "Date should not be null";
         this.category = category;
         this.amount = amount;
         this.description = description;

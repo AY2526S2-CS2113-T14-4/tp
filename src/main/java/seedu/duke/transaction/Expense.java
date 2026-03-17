@@ -10,14 +10,17 @@ public class Expense extends Transaction {
 
     public Expense(String category, double amount, String description, LocalDate date) {
         super(category, amount, description, date);
+        assert VALID_CATEGORIES.contains(category) : "Expense category must be one of: " + VALID_CATEGORIES;
     }
 
     public Expense(String category, double amount, String description) {
         super(category, amount, description);
+        assert VALID_CATEGORIES.contains(category) : "Expense category must be one of: " + VALID_CATEGORIES;
     }
 
     public Expense(String category, double amount) {
         super(category, amount);
+        assert VALID_CATEGORIES.contains(category) : "Expense category must be one of: " + VALID_CATEGORIES;
     }
 
     @Override
