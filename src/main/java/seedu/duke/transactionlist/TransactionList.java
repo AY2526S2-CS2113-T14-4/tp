@@ -35,7 +35,6 @@ public class TransactionList {
      * @return the size of the transaction list
      */
     public int size() {
-        logger.info("Retrieving transaction list size");
         return transactions.size();
     }
 
@@ -59,7 +58,6 @@ public class TransactionList {
      */
     public Transaction get(int i) {
         assert i >= 0 && i < transactions.size() : "Index is out of bounds";
-        logger.info("Retrieving transaction at index: " + i);
         return transactions.get(i);
     }
 
