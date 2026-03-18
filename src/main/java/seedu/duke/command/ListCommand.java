@@ -8,7 +8,7 @@ public class ListCommand extends Command {
     public void execute(TransactionList list, Ui ui) {
         assert list != null : "TransactionList should not be null.";
 
-        if (list.size() == 0) {
+        if (list.isEmpty()) {
             ui.showMessage("No transactions found.");
             return;
         }
