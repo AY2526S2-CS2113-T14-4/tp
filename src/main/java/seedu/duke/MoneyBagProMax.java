@@ -16,11 +16,12 @@ public class MoneyBagProMax {
 
         ui.showWelcomeMessage();
         boolean isExit = false;
-
+        
         while (!isExit) {
             String input = ui.readInput();
             try {
                 Command command = parser.parse(input);
+                assert command != null : "Parser returned null command for input: " + input;
                 command.execute(list, ui);
                 isExit = command.isExit();
             } catch (MoneyBagProMaxException e) {

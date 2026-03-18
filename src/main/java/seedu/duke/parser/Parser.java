@@ -26,7 +26,9 @@ public class Parser {
         }
 
         String[] parts = input.split(" ", 2);
+        assert parts.length >= 1 && parts.length <= 2 : "split produced unexpected part count: " + parts.length;
         String command = parts[0].toLowerCase();
+        assert !command.isEmpty() : "Command token is empty despite non-empty input: " + input;
         String arguments = ((parts.length > 1) ? parts[1].trim() : "");
 
         switch (command) {
@@ -63,12 +65,21 @@ public class Parser {
         try {
             String category = parts[0].trim();
             String remainder = parts[1].trim();
+            
+            assert !category.isEmpty() : "Category is blank after trimming in input: " + args;
+            assert !remainder.isEmpty() : "Remainder after category slash is empty in input: " + args;
 
             double amount = parseAmount(remainder);
             String description = parseDescription(remainder);
             LocalDate date = parseDate(remainder);
-            return new AddCommand(category, amount, description, date);
 
+            assert amount > 0 : "Parsed amount is not positive: " + amount;
+            assert Double.isFinite(amount) : "Parsed amount is infinite or NaN: " + amount;
+            assert !date.isBefore(LocalDate.of(1900, 1, 1)) : 
+                    "Parsed date is before year 1900, likely a typo: " + date;
+            
+            return new AddCommand(category, amount, description, date);
+            
         } catch (NumberFormatException e) {
             throw new MoneyBagProMaxException("Invalid price.");
         }
@@ -98,6 +109,8 @@ public class Parser {
             return "";
         }
         int descStart = remainder.indexOf(" desc/") + " desc/".length();
+        assert descStart <= remainder.length() : "descStart index exceeds remainder length";
+
         String afterDesc = remainder.substring(descStart).trim();
         if (afterDesc.contains(" d/")) {
             return afterDesc.substring(0, afterDesc.indexOf(" d/")).trim();
@@ -120,6 +133,8 @@ public class Parser {
         } else if (amountToken.contains(" d/")) {
             amountToken = amountToken.substring(0, amountToken.indexOf(" d/"));
         }
+        assert !amountToken.trim().isEmpty() : "Amount token is empty after stripping flags from: " + remainder;
+
         return Double.parseDouble(amountToken.trim());
     }
 

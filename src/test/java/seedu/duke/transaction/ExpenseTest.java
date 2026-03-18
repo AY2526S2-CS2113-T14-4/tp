@@ -4,6 +4,8 @@ import org.junit.jupiter.api.Test;
 
 import java.time.LocalDate;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
 public class ExpenseTest {
 
@@ -35,5 +37,34 @@ public class ExpenseTest {
     public void toString_withDescription_formatsCorrectly() {
         Expense expense = new Expense("food", 10.00, "lunch", LocalDate.of(2025, 3, 1));
         assertEquals("[Expense] food \"lunch\" $10.00 (2025-03-01)", expense.toString());
+    }
+    
+    @Test
+    public void constructor_allValidCategories_noAssertionError() {
+        for (String category : Expense.VALID_CATEGORIES) {
+            assertDoesNotThrow(() -> new Expense(category, 5.00),
+                    "Category should be valid: " + category);
+        }
+    }
+
+    @Test
+    public void toString_withDescriptionNoDate_usesTodaysDate() {
+        Expense expense = new Expense("food", 10.00, "breakfast");
+        String expected = String.format("[Expense] food \"breakfast\" $10.00 (%s)", LocalDate.now());
+        assertEquals(expected, expense.toString());
+    }
+
+    @Test
+    public void toString_noDescriptionNoDate_usesTodaysDate() {
+        Expense expense = new Expense("rent", 800.00);
+        String expected = String.format("[Expense] rent $800.00 (%s)", LocalDate.now());
+        assertEquals(expected, expense.toString());
+    }
+
+    @Test
+    public void toString_wholeNumberAmount_formatsTwoDecimalPlaces() {
+        Expense expense = new Expense("utilities", 50.00, "", LocalDate.of(2025, 6, 15));
+        assertTrue(expense.toString().contains("$50.00"),
+                "Amount should be formatted to 2 decimal places");
     }
 }
