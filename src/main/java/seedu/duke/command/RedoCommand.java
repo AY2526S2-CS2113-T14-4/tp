@@ -31,6 +31,7 @@ public class RedoCommand extends Command {
         case DELETE:
             Transaction removed = list.remove(action.getIndex());
             ui.showMessage("Redo: Removed " + removed);
+            break;
         case EDIT:
             list.remove(action.getIndex());
             list.insert(action.getIndex(), action.getTransaction());
