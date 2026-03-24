@@ -75,7 +75,9 @@ public class Storage {
                     case "expense" -> new Expense(category, amount, description, date);
                     default        -> null;
                     };
-                    if (t != null) list.add(t);
+                    if (t != null) {
+                        list.add(t);
+                    }
                 } catch (Exception e) {
                     System.out.println("[WARN] Skipping malformed line: " + e.getMessage());
                 }

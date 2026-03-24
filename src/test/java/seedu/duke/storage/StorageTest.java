@@ -192,13 +192,10 @@ class StorageTest {
     void load_nonPrefixedLines_skipped() throws MoneyBagProMaxException, IOException {
         Files.createDirectories(Paths.get("data"));
         Files.writeString(Paths.get(DATA_FILE),
-                          """
-                                  # this is a comment
-                                  
-                                  [TXN] | type=expense | category=food | amount=10.0 | description=lunch | date=2026-03-23
-                                  some random line
-                                  """);
-
+                          "# this is a comment\n\n"
+                                  + "[TXN] | type=expense | category=food | amount=10.0"
+                                  + " | description=lunch | date=2026-03-23\n"
+                                  + "some random line\n");
         storage.load(list);
         assertEquals(1, list.size());
     }
