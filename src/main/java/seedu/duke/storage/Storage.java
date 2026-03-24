@@ -14,7 +14,6 @@ import java.nio.file.StandardCopyOption;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -49,7 +48,9 @@ public class Storage {
                 return; 
             }
 
-            while (!list.isEmpty()) list.remove(0);
+            while (!list.isEmpty()) {
+                list.remove(0);
+            }
             for (String line : Files.readAllLines(p)) {
                 if (!line.startsWith(TXN_PREFIX)) {
                     continue;
@@ -64,13 +65,15 @@ public class Storage {
                     String amountStr   = f.get("amount");
                     String description = f.getOrDefault("description", "");
                     String dateStr     = f.get("date");
-                    if (type == null || category == null || amountStr == null || dateStr == null) continue;
+                    if (type == null || category == null || amountStr == null || dateStr == null) {
+                        continue;
+                    }
                     double amount  = Double.parseDouble(amountStr);
                     LocalDate date = LocalDate.parse(dateStr);
                     Transaction t = switch (type) {
-                        case "income"  -> new Income(category, amount, description, date);
-                        case "expense" -> new Expense(category, amount, description, date);
-                        default        -> null;
+                    case "income"  -> new Income(category, amount, description, date);
+                    case "expense" -> new Expense(category, amount, description, date);
+                    default        -> null;
                     };
                     if (t != null) list.add(t);
                 } catch (Exception e) {
