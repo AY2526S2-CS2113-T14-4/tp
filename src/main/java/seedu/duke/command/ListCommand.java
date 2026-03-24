@@ -10,4 +10,10 @@ public class ListCommand extends Command {
         assert list != null : "TransactionList should not be null.";
         ui.showList(list);
     }
+
+    /** @return boolean — always true, this command modifies the transaction list. */
+    @Override
+    public boolean isMutating() {
+        return true;
+    }
 }

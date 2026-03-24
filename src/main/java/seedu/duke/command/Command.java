@@ -21,4 +21,14 @@ public abstract class Command {
     public boolean isExit() {
         return false;
     }
+
+    /**
+     * Returns whether this command mutates the transaction list.
+     * Used by the main loop to determine if storage should be saved after execution.
+     *
+     * @return boolean — true if the command modifies the list, false otherwise.
+     */
+    public boolean isMutating() {
+        return false;
+    }
 }

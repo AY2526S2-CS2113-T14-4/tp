@@ -3,6 +3,7 @@ package seedu.duke;
 import seedu.duke.budget.Budget;
 import seedu.duke.command.Command;
 import seedu.duke.parser.Parser;
+import seedu.duke.storage.Storage;
 import seedu.duke.transactionlist.TransactionList;
 import seedu.duke.ui.Ui;
 import seedu.duke.undoredo.UndoRedoManager;
@@ -21,9 +22,11 @@ public class MoneyBagProMax {
         logger.setLevel(Level.WARNING);
     }
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws MoneyBagProMaxException {
         logger.info("Starting the MoneyBagProMax application...");
         TransactionList list = new TransactionList();
+        Storage storage = new Storage();
+        storage.load(list);
         UndoRedoManager undoRedoManager = new UndoRedoManager();
         Parser parser = new Parser(undoRedoManager);
         Ui ui = new Ui();
@@ -38,6 +41,9 @@ public class MoneyBagProMax {
                 Command command = parser.parse(input);
                 assert command != null : "Parser returned null command for input: " + input;
                 command.execute(list, budget, ui);
+                if (command.isMutating()) {
+                    storage.save(list);
+                }
                 isExit = command.isExit();
             } catch (MoneyBagProMaxException e) {
                 ui.showMessage(e.getMessage());

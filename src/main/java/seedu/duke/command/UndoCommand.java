@@ -43,4 +43,10 @@ public class UndoCommand extends Command {
             throw new MoneyBagProMaxException("Unknown action type.");
         }
     }
+
+    /** @return boolean — always true, this command modifies the transaction list. */
+    @Override
+    public boolean isMutating() {
+        return true;
+    }
 }

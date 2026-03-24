@@ -32,4 +32,10 @@ public class DeleteCommand extends Command {
         undoRedoManager.recordDelete(removed, listIndex);
         ui.showMessage("Deleted: " + removed);
     }
+
+    /** @return boolean — always true, this command modifies the transaction list. */
+    @Override
+    public boolean isMutating() {
+        return true;
+    }
 }
