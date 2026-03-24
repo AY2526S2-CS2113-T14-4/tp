@@ -99,7 +99,9 @@ public class Storage {
             String[] parts = line.split("\\s*\\|\\s*");
             for (int i = 1; i < parts.length; i++) {
                 int eq = parts[i].indexOf(KV_SEP);
-                if (eq < 0) continue;
+                if (eq < 0) {
+                    continue;
+                }
                 fields.put(parts[i].substring(0, eq).trim(),
                            parts[i].substring(eq + 1).trim());
             }
