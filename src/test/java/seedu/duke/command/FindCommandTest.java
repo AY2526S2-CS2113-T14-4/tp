@@ -1,6 +1,7 @@
 package seedu.duke.command;
 
 import seedu.duke.MoneyBagProMaxException;
+import seedu.duke.budget.Budget;
 import seedu.duke.transaction.Expense;
 import seedu.duke.transaction.Income;
 import seedu.duke.transactionlist.TransactionList;
@@ -20,6 +21,7 @@ class FindCommandTest {
 
     private final ByteArrayOutputStream outContent = new ByteArrayOutputStream();
     private final PrintStream originalOut = System.out;
+    private final Budget budget = new Budget();
 
     @BeforeEach
     public void setUpStreams() {
@@ -41,7 +43,7 @@ class FindCommandTest {
         list.add(new Expense("transport", 5.00, "bus to lunch", LocalDate.parse("2026-03-16")));
 
         Command command = new FindCommand("lunch");
-        command.execute(list, ui);
+        command.execute(list, budget, ui);
 
         String expectedOutput = "Found 2 matching transaction(s):" + System.lineSeparator() +
                 "1. [Expense] food \"lunch\" $10.50 (2026-03-14)" + System.lineSeparator() +
@@ -58,7 +60,7 @@ class FindCommandTest {
         list.add(new Expense("food", 10.50, "lunch", LocalDate.parse("2026-03-14")));
 
         Command command = new FindCommand("elephant");
-        command.execute(list, ui);
+        command.execute(list, budget, ui);
 
         String expectedOutput = "No matching transactions found for: elephant" + System.lineSeparator();
         assertEquals(expectedOutput, outContent.toString());

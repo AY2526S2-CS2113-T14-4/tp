@@ -1,5 +1,6 @@
 package seedu.duke.command;
 
+import seedu.duke.budget.Budget;
 import seedu.duke.transaction.Transaction;
 import seedu.duke.transactionlist.TransactionList;
 import seedu.duke.ui.Ui;
@@ -20,11 +21,11 @@ public class FindCommand extends Command {
     }
 
     @Override
-    public void execute(TransactionList list, Ui ui) {
+    public void execute(TransactionList list, Budget budget, Ui ui) {
         assert list != null;
 
         if (keyword.isEmpty()) {
-            ui.showMessage("Please provide a keyword to seach for.");
+            ui.showMessage("Please provide a keyword to search for.");
             return;
         }
 

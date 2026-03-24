@@ -1,5 +1,6 @@
 package seedu.duke;
 
+import seedu.duke.budget.Budget;
 import seedu.duke.command.Command;
 import seedu.duke.parser.Parser;
 import seedu.duke.storage.Storage;
@@ -29,8 +30,8 @@ public class MoneyBagProMax {
         UndoRedoManager undoRedoManager = new UndoRedoManager();
         Parser parser = new Parser(undoRedoManager);
         Ui ui = new Ui();
+        Budget budget = new Budget();
         logger.info("Core components: TransactionList, Parser, UndoRedoManager and Ui initialised successfully.");
-
         ui.showWelcomeMessage();
         boolean isExit = false;
         

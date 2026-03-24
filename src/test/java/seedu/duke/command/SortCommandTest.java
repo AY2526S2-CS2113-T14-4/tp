@@ -1,6 +1,7 @@
 package seedu.duke.command;
 
 import seedu.duke.MoneyBagProMaxException;
+import seedu.duke.budget.Budget;
 import seedu.duke.transaction.Expense;
 import seedu.duke.transaction.Income;
 import seedu.duke.transactionlist.TransactionList;
@@ -21,6 +22,7 @@ class SortCommandTest {
 
     private final ByteArrayOutputStream outContent = new ByteArrayOutputStream();
     private final PrintStream originalOut = System.out;
+    private final Budget budget = new Budget();
 
     @BeforeEach
     public void setUpStreams() {
@@ -42,7 +44,7 @@ class SortCommandTest {
         list.add(new Expense("transport", 5.00, "bus", LocalDate.parse("2026-03-15")));
 
         Command command = new SortCommand("date");
-        command.execute(list, ui);
+        command.execute(list, budget, ui);
 
         String expectedOutput = "Transactions sorted by date:" + System.lineSeparator()
                 + "1. [Income] salary \"pay\" $50.00 (2026-03-14)" + System.lineSeparator()
@@ -62,7 +64,7 @@ class SortCommandTest {
         list.add(new Expense("transport", 5.00, "bus", LocalDate.parse("2026-03-14")));
 
         Command command = new SortCommand("amount");
-        command.execute(list, ui);
+        command.execute(list, budget, ui);
 
         String expectedOutput = "Transactions sorted by amount:" + System.lineSeparator()
                 + "1. [Income] salary \"pay\" $50.00 (2026-03-14)" + System.lineSeparator()
@@ -82,7 +84,7 @@ class SortCommandTest {
         list.add(new Income("salary", 50.00, "pay", LocalDate.parse("2026-03-14")));
 
         Command command = new SortCommand("category");
-        command.execute(list, ui);
+        command.execute(list, budget, ui);
 
         String expectedOutput = "Transactions sorted by category:" + System.lineSeparator()
                 + "1. [Expense] food \"lunch\" $10.50 (2026-03-14)" + System.lineSeparator()
@@ -98,7 +100,7 @@ class SortCommandTest {
         Ui ui = new Ui();
 
         Command command = new SortCommand("date");
-        command.execute(list, ui);
+        command.execute(list, budget, ui);
 
         String expectedOutput = "No transactions found." + System.lineSeparator();
         assertEquals(expectedOutput, outContent.toString());
@@ -112,7 +114,7 @@ class SortCommandTest {
         list.add(new Expense("food", 10.50, "lunch", LocalDate.parse("2026-03-14")));
 
         Command command = new SortCommand("invalid");
-        assertThrows(MoneyBagProMaxException.class, () -> command.execute(list, ui));
+        assertThrows(MoneyBagProMaxException.class, () -> command.execute(list, budget, ui));
     }
 
     @Test
@@ -127,7 +129,7 @@ class SortCommandTest {
         list.add(second);
 
         Command command = new SortCommand("date");
-        command.execute(list, ui);
+        command.execute(list, budget, ui);
 
         assertEquals(first, list.get(0));
         assertEquals(second, list.get(1));

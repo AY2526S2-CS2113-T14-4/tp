@@ -58,11 +58,27 @@ public class Ui {
                 7. Delete      : `delete [ENTRY INDEX]`
                                  - Deletes a transaction using its number from the `list`.
                                  - Example: delete 3
-                8. Undo        : `undo`
+                8. Edit        : `edit [INDEX] [category]/PRICE [desc/DESCRIPTION] [d/YYYY-MM-DD]`
+                                 - Replaces a transaction at INDEX with the new values.
+                                 - Same category/price/desc/date format as `add`.
+                                 - Example: edit 3 food/20 desc/dinner d/2026-03-20                 
+                9. Undo        : `undo`
                                  - Reverses the last add or delete action.
-                9. Redo        : `redo`
+                10. Redo        : `redo`
                                  - Re-applies the last undone action.
-                10. Exit       : `exit`
+                11. Budget     : `budget set [AMOUNT]` or `budget status`
+                                 - Sets the monthly budget or shows the current budget status.
+                                 - `budget set` stores the monthly spending limit.
+                                 - `budget status` shows budget, spent amount, remaining amount,
+                                   and progress bar.
+                                 - Example: budget set 1000
+                                 - Example: budget status
+                12. Stats      : `stats`
+                                 - Displays spending analytics for recorded transactions.
+                                 - Includes highest and lowest transaction, most frequent category,
+                                   average spending per category, and spending trend.
+                                 - Example: stats
+                13. Exit       : `exit`
                                  - Exits the program.
                 %s""".formatted(separator, separator, separator);
 

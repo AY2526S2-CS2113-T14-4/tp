@@ -1,6 +1,7 @@
 package seedu.duke.command;
 
 import seedu.duke.MoneyBagProMaxException;
+import seedu.duke.budget.Budget;
 import seedu.duke.transactionlist.TransactionList;
 import seedu.duke.ui.Ui;
 
@@ -11,7 +12,7 @@ public abstract class Command {
      * @param list The current list of transactions.
      * @param ui   The ui instance.
      */
-    public abstract void execute(TransactionList list, Ui ui) throws MoneyBagProMaxException;
+    public abstract void execute(TransactionList list, Budget budget, Ui ui) throws MoneyBagProMaxException;
 
     /**
      * Indicates whether this command should exit the application.

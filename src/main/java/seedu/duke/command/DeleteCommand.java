@@ -1,6 +1,7 @@
 package seedu.duke.command;
 
 import seedu.duke.MoneyBagProMaxException;
+import seedu.duke.budget.Budget;
 import seedu.duke.transaction.Transaction;
 import seedu.duke.transactionlist.TransactionList;
 import seedu.duke.ui.Ui;
@@ -18,7 +19,7 @@ public class DeleteCommand extends Command {
     }
 
     @Override
-    public void execute(TransactionList list, Ui ui) throws MoneyBagProMaxException {
+    public void execute(TransactionList list, Budget budget, Ui ui) throws MoneyBagProMaxException {
         assert list != null : "Transaction list should not be null";
 
         int listIndex = targetIndex - 1;
