@@ -1,6 +1,7 @@
 package seedu.duke.command;
 
 import seedu.duke.MoneyBagProMaxException;
+import seedu.duke.budget.Budget;
 import seedu.duke.transaction.Transaction;
 import seedu.duke.transactionlist.TransactionList;
 import seedu.duke.ui.Ui;
@@ -34,7 +35,7 @@ public class SortCommand extends Command {
      * @throws MoneyBagProMaxException if the sort criteria is invalid
      */
     @Override
-    public void execute(TransactionList list, Ui ui) throws MoneyBagProMaxException {
+    public void execute(TransactionList list, Budget budget, Ui ui) throws MoneyBagProMaxException {
         assert list != null : "TransactionList should not be null";
 
         if (list.isEmpty()) {

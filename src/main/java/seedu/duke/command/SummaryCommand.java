@@ -1,5 +1,6 @@
 package seedu.duke.command;
 
+import seedu.duke.budget.Budget;
 import seedu.duke.transaction.Transaction;
 import seedu.duke.transactionlist.TransactionList;
 import seedu.duke.ui.Ui;
@@ -19,10 +20,10 @@ public class SummaryCommand extends Command {
      * @param ui    The ui instance to display results.
      */
     @Override
-    public void execute(TransactionList list, Ui ui) {
+    public void execute(TransactionList list, Budget budget, Ui ui) {
         assert list != null : "List should not be null.";
 
-        if (list.size() == 0) {
+        if (list.isEmpty()) {
             ui.showMessage("No transactions found to summarise.");
             return;
         }

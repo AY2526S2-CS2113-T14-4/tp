@@ -1,5 +1,6 @@
 package seedu.duke.command;
 
+import seedu.duke.budget.Budget;
 import seedu.duke.transaction.Expense;
 import seedu.duke.transaction.Income;
 import seedu.duke.transactionlist.TransactionList;
@@ -39,7 +40,8 @@ class AddCommandTest {
 
         AddCommand command = new AddCommand("salary", 1000.00, "monthly", LocalDate.of(2026, 3, 18),
                 new UndoRedoManager());
-        command.execute(list, ui);
+        Budget budget = new Budget();
+        command.execute(list, budget, ui);
 
         assertEquals(1, list.size());
         assertInstanceOf(Income.class, list.get(0));
@@ -53,7 +55,8 @@ class AddCommandTest {
 
         AddCommand command = new AddCommand("food", 10.00, "lunch", LocalDate.of(2026, 3, 18),
                 new UndoRedoManager());
-        command.execute(list, ui);
+        Budget budget = new Budget();
+        command.execute(list, budget, ui);
 
         assertEquals(1, list.size());
         assertInstanceOf(Expense.class, list.get(0));
@@ -67,7 +70,8 @@ class AddCommandTest {
 
         AddCommand command = new AddCommand("invalid", 10.00, "test", LocalDate.of(2026, 3, 18),
                 new UndoRedoManager());
-        command.execute(list, ui);
+        Budget budget = new Budget();
+        command.execute(list, budget, ui);
 
         assertEquals(0, list.size());
         String output = outContent.toString();

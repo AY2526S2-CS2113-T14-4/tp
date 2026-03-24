@@ -7,6 +7,9 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.time.YearMonth;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  *  Manages the list of transactions stored in the program.
@@ -108,5 +111,133 @@ public class TransactionList {
         ArrayList<Transaction> sorted = new ArrayList<>(transactions);
         sorted.sort(comparator);
         return sorted;
+    }
+
+    private Transaction getExtremeTransaction(String type, boolean findMax) {
+        Transaction result = null;
+        for (Transaction t : transactions) {
+            if (t.getType().equals(type)) {
+                if (result == null) {
+                    result = t;
+                } else if (findMax && t.getAmount() > result.getAmount()) {
+                    result = t;
+                } else if (!findMax && t.getAmount() < result.getAmount()) {
+                    result = t;
+                }
+            }
+        }
+        return result;
+    }
+
+    public Transaction getHighestExpense() {
+        return getExtremeTransaction("expense", true);
+    }
+
+    public Transaction getLowestExpense() {
+        return getExtremeTransaction("expense", false);
+    }
+
+    public Transaction getHighestIncome() {
+        return getExtremeTransaction("income", true);
+    }
+
+    public String getMostFrequentCategory() {
+        Map<String, Integer> map = new HashMap<>();
+        for (Transaction t : transactions) {
+            if (t.getType().equals("expense")) {
+                String cat = t.getCategory();
+                map.put(cat, map.getOrDefault(cat, 0) + 1);
+            }
+        }
+        String mostFreq = null;
+        int max = 0;
+        for (String cat : map.keySet()) {
+            if (map.get(cat) > max) {
+                max = map.get(cat);
+                mostFreq = cat;
+            }
+        }
+        return mostFreq;
+    }
+
+    public HashMap<String, Double> getAverageSpendingPerCategory() {
+        Map<String, Double> totalMap = new HashMap<>();
+        Map<String, Integer> countMap = new HashMap<>();
+
+        for (Transaction t : transactions) {
+            if (t.getType().equals("expense")) {
+                String cat = t.getCategory();
+                totalMap.put(cat, totalMap.getOrDefault(cat, 0.0) + t.getAmount());
+                countMap.put(cat, countMap.getOrDefault(cat, 0) + 1);
+            }
+        }
+
+        HashMap<String, Double> avgMap = new HashMap<>();
+        for (String cat : totalMap.keySet()) {
+            avgMap.put(cat, totalMap.get(cat) / countMap.get(cat));
+        }
+
+        return avgMap;
+    }
+
+    public String getSpendingTrend() {
+        if (transactions.size() < 2) {
+            return "Not enough data";
+        }
+
+        double earlier = 0;
+        double later = 0;
+
+        YearMonth firstMonth = YearMonth.from(transactions.get(0).getDate());
+        YearMonth lastMonth = YearMonth.from(transactions.get(transactions.size() - 1).getDate());
+
+        for (Transaction t : transactions) {
+            if (t.getType().equals("expense")) {
+                YearMonth tMonth = YearMonth.from(t.getDate());
+                if (tMonth.equals(firstMonth)) {
+                    earlier += t.getAmount();
+                } else if (tMonth.equals(lastMonth)) {
+                    later += t.getAmount();
+                }
+            }
+        }
+
+        if (later > earlier) {
+            return "Increasing";
+        } else if (later < earlier) {
+            return "Decreasing";
+        } else {
+            return "Stable";
+        }
+    }
+
+    public double getTotalExpenses() {
+        double total = 0;
+        for (Transaction t : transactions) {
+            if (t.getType().equals("expense")) {
+                total += t.getAmount();
+            }
+        }
+        return total;
+    }
+
+    public double getTotalIncome() {
+        double total = 0;
+        for (Transaction t : transactions) {
+            if (t.getType().equals("income")) {
+                total += t.getAmount();
+            }
+        }
+        return total;
+    }
+
+    public double getTotalExpensesForMonth(YearMonth month) {
+        double total = 0;
+        for (Transaction t : transactions) {
+            if (t.getType().equals("expense") && YearMonth.from(t.getDate()).equals(month)) {
+                total += t.getAmount();
+            }
+        }
+        return total;
     }
 }

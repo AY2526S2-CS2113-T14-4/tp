@@ -1,5 +1,6 @@
 package seedu.duke.command;
 
+import seedu.duke.budget.Budget;
 import seedu.duke.transaction.Expense;
 import seedu.duke.transaction.Income;
 import seedu.duke.transaction.Transaction;
@@ -31,7 +32,7 @@ public class AddCommand extends Command {
     }
 
     @Override
-    public void execute(TransactionList list, Ui ui) {
+    public void execute(TransactionList list, Budget budget, Ui ui) {
         Transaction transaction = null;
         if (Income.VALID_CATEGORIES.contains(category.toLowerCase())) {
             transaction = new Income(category, amount, description, date);

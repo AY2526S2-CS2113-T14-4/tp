@@ -4,6 +4,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import seedu.duke.MoneyBagProMaxException;
+import seedu.duke.budget.Budget;
 import seedu.duke.command.Command;
 import seedu.duke.parser.Parser;
 import seedu.duke.transactionlist.TransactionList;
@@ -21,6 +22,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 public class IncomeTest {
     private final ByteArrayOutputStream outContent = new ByteArrayOutputStream();
     private final PrintStream originalOut = System.out;
+    private final Budget budget = new Budget();
 
     @BeforeEach
     public void setUpStreams() {
@@ -40,7 +42,7 @@ public class IncomeTest {
 
         // Updated to use a valid income category
         Command command = parser.parse("add salary/50.00 desc/monthly d/2023-10-01");
-        command.execute(list, ui);
+        command.execute(list, budget, ui);
 
         assertEquals(1, list.size(), "List should have 1 transaction");
         assertInstanceOf(Income.class, list.get(0), "The added transaction should be an instance of Income");
@@ -84,7 +86,7 @@ public class IncomeTest {
         list.add(new Income("salary", 5000.00, "monthly", LocalDate.now()));
 
         Command command = parser.parse("summary");
-        command.execute(list, ui);
+        command.execute(list, budget, ui);
 
         String expectedOutput = "===== Overall Summary =====" + System.lineSeparator() +
                 "Total Income: $5000.00" + System.lineSeparator() +

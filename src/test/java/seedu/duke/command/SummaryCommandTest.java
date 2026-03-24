@@ -1,6 +1,7 @@
 package seedu.duke.command;
 
 import seedu.duke.MoneyBagProMaxException;
+import seedu.duke.budget.Budget;
 import seedu.duke.transaction.Expense;
 import seedu.duke.transaction.Income;
 import seedu.duke.transactionlist.TransactionList;
@@ -22,6 +23,7 @@ class SummaryCommandTest {
     // these variables help us capture the console output
     private final ByteArrayOutputStream outContent = new ByteArrayOutputStream();
     private final PrintStream originalOut = System.out;
+    private final Budget budget = new Budget();
 
     @BeforeEach
     public void setUpStreams() {
@@ -43,7 +45,7 @@ class SummaryCommandTest {
         list.add(new Income("salary", 25.50, "monthly", LocalDate.now()));
 
         Command command = new SummaryCommand("all");
-        command.execute(list, ui); // Execute directly!
+        command.execute(list, budget, ui); // Execute directly!
 
         String expectedOutput = "===== Overall Summary =====" + System.lineSeparator() +
                 "Total Income: $25.50" + System.lineSeparator() +
@@ -60,7 +62,7 @@ class SummaryCommandTest {
         Ui ui = new Ui();
 
         Command command = new SummaryCommand("all");
-        command.execute(emptyList, ui);
+        command.execute(emptyList, budget, ui);
 
         String expectedOutput = "No transactions found to summarise." + System.lineSeparator();
         assertEquals(expectedOutput, outContent.toString());
