@@ -78,7 +78,19 @@ public class Ui {
                                  - Includes highest and lowest transaction, most frequent category,
                                    average spending per category, and spending trend.
                                  - Example: stats
-                13. Exit       : `exit`
+                13. Add Recurring: `add [category]/PRICE [desc/DESCRIPTION] [d/YYYY-MM-DD] rec/FREQUENCY`
+                                 - Creates a recurring transaction template.
+                                 - Valid frequencies: `daily`, `weekly`, `monthly`
+                                 - The date (d/) sets the start date (defaults to today).
+                                 - Example: add food/10 desc/lunch rec/daily
+                14. List Recurring: `list-rec`
+                                 - Lists all recurring transaction templates.
+                15. Delete Recurring: `delete-rec [INDEX]`
+                                 - Deletes a recurring template by its index from `list-rec`.
+                                 - Example: delete-rec 2
+                16. Generate   : `gen-rec`
+                                 - Generates all due recurring transactions up to today.
+                17. Exit       : `exit`
                                  - Exits the program.
                 %s""".formatted(separator, separator, separator);
 
