@@ -1,0 +1,37 @@
+@startuml StorageLoadSequenceDiagram
+skinparam sequenceArrowThickness 2
+skinparam roundcorner 5
+skinparam sequenceParticipant underline
+
+actor ":Main" as Main
+participant ":Storage" as Storage
+participant ":TransactionList" as TList
+participant "t:Transaction" as T
+
+Main -> Storage : load(list)
+activate Storage
+
+Storage -> Storage : createDirectories("data/")
+Storage -> Storage : createFile("data/transactions.txt")\n[if not exists]
+
+loop for each line in transactions.txt
+    Storage -> Storage : parseLine(line)
+    activate Storage #LightGray
+    Storage --> Storage : fields (Map<String,String>)
+    deactivate Storage
+
+    alt type == "income"
+        create T
+        Storage -> T : new Income(category, amount, description, date)
+    else type == "expense"
+        create T
+        Storage -> T : new Expense(category, amount, description, date)
+    end
+
+    Storage -> TList : add(t)
+end
+
+Storage --> Main : (returns)
+deactivate Storage
+
+@enduml

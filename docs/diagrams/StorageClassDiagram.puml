@@ -1,0 +1,41 @@
+@startuml StorageClassDiagram
+hide circle
+skinparam classAttributeIconSize 0
+
+class Storage {
+    +load(list: TransactionList): void
+    +save(list: TransactionList): void
+    -parseLine(line: String): Map<String, String>
+    -serializeLine(t: Transaction): String
+}
+
+class TransactionList {
+    +add(t: Transaction): void
+    +get(i: int): Transaction
+    +remove(i: int): Transaction
+    +size(): int
+    +isEmpty(): boolean
+}
+
+class "{abstract}\nTransaction" as Transaction {
+    +getType(): String
+    +getCategory(): String
+    +getAmount(): double
+    +getDescription(): String
+    +getDate(): LocalDate
+}
+
+class Income {
+    +getType(): String
+}
+
+class Expense {
+    +getType(): String
+}
+
+Transaction <|-- Income
+Transaction <|-- Expense
+Storage ..> TransactionList
+TransactionList ..> Transaction
+
+@enduml
