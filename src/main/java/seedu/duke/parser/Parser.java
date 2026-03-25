@@ -16,6 +16,7 @@ import seedu.duke.command.EditCommand;
 import seedu.duke.undoredo.UndoRedoManager;
 import seedu.duke.command.BudgetCommand;
 import seedu.duke.command.StatsCommand;
+import seedu.duke.command.FilterCommand;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
@@ -77,6 +78,11 @@ public class Parser {
             return new RedoCommand(undoRedoManager);
         case "edit":
             return parseEditCommand(arguments);
+        case "filter":
+            if (arguments.isEmpty()) {
+                throw new MoneyBagProMaxException("Invalid format. Use: filter from/YYYY-MM-DD to/YYYY-MM-DD");
+            }
+            return parseFilterCommand(arguments);
         default:
             throw new MoneyBagProMaxException("Unknown command. Type `help` to see the list of available commands.");
         }
@@ -264,6 +270,34 @@ public class Parser {
             return new EditCommand(index, category, amount, description, date, undoRedoManager);
         } catch (NumberFormatException e) {
             throw new MoneyBagProMaxException("Invalid price.");
+        }
+    }
+
+    private Command parseFilterCommand(String args) throws MoneyBagProMaxException {
+        if (!args.contains("from/") || !args.contains("to/")) {
+            throw new MoneyBagProMaxException(
+                    "Invalid format. Use: filter from/YYYY-MM-DD to/YYYY-MM-DD");
+        }
+
+        try {
+            int fromStart = args.indexOf("from/") + "from/".length();
+            String fromToken = args.substring(fromStart).split(" ")[0].trim();
+
+            int toStart = args.indexOf("to/") + "to/".length();
+            String toToken = args.substring(toStart).split(" ")[0].trim();
+
+            LocalDate from = LocalDate.parse(fromToken);
+            LocalDate to = LocalDate.parse(toToken);
+
+            if (from.isAfter(to)) {
+                throw new MoneyBagProMaxException("The 'from' date cannot be after the 'to' date!");
+            }
+
+            return new FilterCommand(from, to);
+
+        } catch (DateTimeParseException e) {
+            throw new MoneyBagProMaxException("Invalid date format — expected YYYY-MM-DD. "
+                            + "Use: filter from/YYYY-MM-DD to/YYYY-MM-DD");
         }
     }
 }
