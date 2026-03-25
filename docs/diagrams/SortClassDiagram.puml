@@ -1,0 +1,35 @@
+@startuml
+hide circle
+skinparam classAttributeIconSize 0
+
+class "{abstract}\nCommand" as Command {
+  +execute(list: TransactionList, budget: Budget, ui: Ui): void
+  +isMutating(): boolean
+}
+
+class SortCommand {
+  -sortBy: String
+  +SortCommand(sortBy: String)
+  +execute(list: TransactionList, budget: Budget, ui: Ui): void
+}
+
+class TransactionList {
+  +getSortedList(comparator: Comparator<Transaction>): List<Transaction>
+  +isEmpty(): boolean
+}
+
+class Transaction {
+  +getDate(): LocalDate
+  +getAmount(): double
+  +getCategory(): String
+}
+
+class Ui {
+  +showMessage(message: String): void
+}
+
+Command <|-- SortCommand
+SortCommand ..> TransactionList
+SortCommand ..> Ui
+TransactionList --> Transaction
+@enduml

@@ -1,0 +1,27 @@
+@startuml
+actor User
+participant Ui
+participant Parser
+participant SortCommand
+participant TransactionList
+
+User -> Ui : enter "sort by/date"
+Ui -> Parser : parse("sort by/date")
+Parser -> Parser : parseSortCommand("by/date")
+Parser --> Ui : SortCommand
+Ui -> SortCommand : execute(list, budget, ui)
+SortCommand -> TransactionList : isEmpty()
+
+alt list is empty
+    SortCommand -> Ui : showMessage("No transactions found.")
+else list not empty
+    SortCommand -> SortCommand : create Comparator
+    note right of SortCommand : Comparator.comparing(\nTransaction::getDate)
+    SortCommand -> TransactionList : getSortedList(comparator)
+    note right of TransactionList : Creates defensive copy,\nsorts, returns sorted list
+    TransactionList --> SortCommand : sortedList
+    loop for each sorted transaction
+        SortCommand -> Ui : showMessage(...)
+    end
+end
+@enduml

@@ -1,0 +1,28 @@
+@startuml
+actor User
+participant Ui
+participant Parser
+participant UndoCommand
+participant UndoRedoManager
+participant TransactionList
+
+User -> Ui : enter "undo"
+Ui -> Parser : parse("undo")
+Parser --> Ui : UndoCommand
+Ui -> UndoCommand : execute(list, budget, ui)
+UndoCommand -> UndoRedoManager : getUndoAction()
+note right of UndoRedoManager : Pops from undoStack,\npushes to redoStack
+UndoRedoManager --> UndoCommand : ActionPair
+
+alt action type is ADD
+    UndoCommand -> TransactionList : remove(index)
+    UndoCommand -> Ui : showMessage("Undo: Removed ...")
+else action type is DELETE
+    UndoCommand -> TransactionList : insert(index, transaction)
+    UndoCommand -> Ui : showMessage("Undo: Restored ...")
+else action type is EDIT
+    UndoCommand -> TransactionList : remove(index)
+    UndoCommand -> TransactionList : insert(index, oldTransaction)
+    UndoCommand -> Ui : showMessage("Undo: Reverted edit ...")
+end
+@enduml

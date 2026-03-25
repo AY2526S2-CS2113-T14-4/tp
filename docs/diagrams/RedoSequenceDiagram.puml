@@ -1,0 +1,28 @@
+@startuml
+actor User
+participant Ui
+participant Parser
+participant RedoCommand
+participant UndoRedoManager
+participant TransactionList
+
+User -> Ui : enter "redo"
+Ui -> Parser : parse("redo")
+Parser --> Ui : RedoCommand
+Ui -> RedoCommand : execute(list, budget, ui)
+RedoCommand -> UndoRedoManager : getRedoAction()
+note right of UndoRedoManager : Pops from redoStack,\npushes to undoStack
+UndoRedoManager --> RedoCommand : ActionPair
+
+alt action type is ADD
+    RedoCommand -> TransactionList : insert(index, transaction)
+    RedoCommand -> Ui : showMessage("Redo: Re-added ...")
+else action type is DELETE
+    RedoCommand -> TransactionList : remove(index)
+    RedoCommand -> Ui : showMessage("Redo: Re-deleted ...")
+else action type is EDIT
+    RedoCommand -> TransactionList : remove(index)
+    RedoCommand -> TransactionList : insert(index, newTransaction)
+    RedoCommand -> Ui : showMessage("Redo: Re-applied edit ...")
+end
+@enduml

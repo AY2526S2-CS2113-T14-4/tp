@@ -1,0 +1,64 @@
+@startuml
+hide circle
+skinparam classAttributeIconSize 0
+
+class "{abstract}\nCommand" as Command {
+  +execute(list: TransactionList, budget: Budget, ui: Ui): void
+  +isMutating(): boolean
+}
+
+class UndoCommand {
+  -undoRedoManager: UndoRedoManager
+  +execute(list: TransactionList, budget: Budget, ui: Ui): void
+  +isMutating(): boolean
+}
+
+class RedoCommand {
+  -undoRedoManager: UndoRedoManager
+  +execute(list: TransactionList, budget: Budget, ui: Ui): void
+  +isMutating(): boolean
+}
+
+class UndoRedoManager {
+  -undoStack: Deque<ActionPair>
+  -redoStack: Deque<ActionPair>
+  +recordAdd(t: Transaction, index: int): void
+  +recordDelete(t: Transaction, index: int): void
+  +recordEdit(old: Transaction, new: Transaction, index: int): void
+  +getUndoAction(): ActionPair
+  +getRedoAction(): ActionPair
+  +canUndo(): boolean
+  +canRedo(): boolean
+}
+
+class ActionPair {
+  -type: ActionType
+  -transaction: Transaction
+  -oldTransaction: Transaction
+  -index: int
+  +getType(): ActionType
+  +getTransaction(): Transaction
+  +getOldTransaction(): Transaction
+  +getIndex(): int
+}
+
+enum ActionType {
+  ADD
+  DELETE
+  EDIT
+}
+
+class TransactionList {
+  +remove(index: int): Transaction
+  +insert(index: int, t: Transaction): void
+}
+
+Command <|-- UndoCommand
+Command <|-- RedoCommand
+UndoCommand --> UndoRedoManager
+RedoCommand --> UndoRedoManager
+UndoRedoManager *-- ActionPair
+ActionPair --> ActionType
+UndoCommand ..> TransactionList
+RedoCommand ..> TransactionList
+@enduml
