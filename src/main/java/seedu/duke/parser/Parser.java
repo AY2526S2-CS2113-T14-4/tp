@@ -286,6 +286,13 @@ public class Parser {
             int toStart = args.indexOf("to/") + "to/".length();
             String toToken = args.substring(toStart).split(" ")[0].trim();
 
+            if (fromToken.isEmpty()) {
+                throw new MoneyBagProMaxException("Missing 'from' date parameter.");
+            }
+            if (toToken.isEmpty()) {
+                throw new MoneyBagProMaxException("Missing 'to' date parameter.");
+            }
+
             LocalDate from = LocalDate.parse(fromToken);
             LocalDate to = LocalDate.parse(toToken);
 
@@ -298,6 +305,9 @@ public class Parser {
         } catch (DateTimeParseException e) {
             throw new MoneyBagProMaxException("Invalid date format — expected YYYY-MM-DD. "
                             + "Use: filter from/YYYY-MM-DD to/YYYY-MM-DD");
+        } catch (IndexOutOfBoundsException e) {
+            throw new MoneyBagProMaxException("Missing date values! "
+                    + "Use: filter from/YYYY-MM-DD to/YYYY-MM-DD");
         }
     }
 }
