@@ -12,6 +12,7 @@ import seedu.duke.command.HelpCommand;
 import seedu.duke.command.FindCommand;
 import seedu.duke.command.SortCommand;
 import seedu.duke.command.UndoCommand;
+import seedu.duke.command.EditCommand;
 import seedu.duke.undoredo.UndoRedoManager;
 
 import java.time.LocalDate;
@@ -68,6 +69,8 @@ public class Parser {
             return new UndoCommand(undoRedoManager);
         case "redo":
             return new RedoCommand(undoRedoManager);
+        case "edit":
+            return parseEditCommand(arguments);
         default:
             throw new MoneyBagProMaxException("Unknown command. Type `help` to see the list of available commands.");
         }
@@ -196,5 +199,39 @@ public class Parser {
                     "Invalid sort criteria. Use: sort by/date, sort by/amount, or sort by/category");
         }
         return new SortCommand(sortBy);
+    }
+    
+    private Command parseEditCommand(String args) throws MoneyBagProMaxException {
+        String[] parts = args.split(" ", 2);
+        if (parts.length < 2) {
+            throw new MoneyBagProMaxException(
+                    "Invalid format. Use: edit INDEX [category]/PRICE [desc/DESCRIPTION] [d/YYYY-MM-DD]");
+        }
+
+        int index;
+        try {
+            index = Integer.parseInt(parts[0].trim());
+        } catch (NumberFormatException e) {
+            throw new MoneyBagProMaxException("Invalid index. Use: edit INDEX [category]/PRICE ...");
+        }
+
+        // Reuse the same parsing logic as parseAddCommand by splitting on the first "/"
+        String remainder = parts[1].trim();
+        String[] categoryAndRest = remainder.split("/", 2);
+        if (categoryAndRest.length < 2) {
+            throw new MoneyBagProMaxException(
+                    "Invalid format. Use: edit INDEX [category]/PRICE [desc/DESCRIPTION] [d/YYYY-MM-DD]");
+        }
+
+        try {
+            String category = categoryAndRest[0].trim();
+            String valueRemainder = categoryAndRest[1].trim();
+            double amount = parseAmount(valueRemainder);
+            String description = parseDescription(valueRemainder);
+            LocalDate date = parseDate(valueRemainder);
+            return new EditCommand(index, category, amount, description, date, undoRedoManager);
+        } catch (NumberFormatException e) {
+            throw new MoneyBagProMaxException("Invalid price.");
+        }
     }
 }

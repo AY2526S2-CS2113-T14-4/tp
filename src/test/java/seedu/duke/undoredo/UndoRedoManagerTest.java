@@ -71,6 +71,50 @@ class UndoRedoManagerTest {
     }
 
     @Test
+    public void recordEdit_thenUndo_returnsEditAction() throws MoneyBagProMaxException {
+        UndoRedoManager manager = new UndoRedoManager();
+        Transaction oldT = sampleTransaction();
+        Transaction newT = new Expense("transport", 25.00, "taxi", LocalDate.of(2026, 3, 21));
+        manager.recordEdit(oldT, newT, 1);
+
+        ActionPair action = manager.getUndoAction();
+        assertEquals(UndoRedoManager.ActionType.EDIT, action.getType());
+        assertEquals(newT, action.getTransaction());
+        assertEquals(oldT, action.getOldTransaction());
+        assertEquals(1, action.getIndex());
+    }
+
+    @Test
+    public void recordEdit_thenUndoThenRedo_roundTripsCorrectly() throws MoneyBagProMaxException {
+        UndoRedoManager manager = new UndoRedoManager();
+        Transaction oldT = sampleTransaction();
+        Transaction newT = new Expense("transport", 25.00, "taxi", LocalDate.of(2026, 3, 21));
+        manager.recordEdit(oldT, newT, 1);
+
+        manager.getUndoAction();
+        assertTrue(manager.canRedo());
+
+        ActionPair redone = manager.getRedoAction();
+        assertEquals(UndoRedoManager.ActionType.EDIT, redone.getType());
+        assertEquals(newT, redone.getTransaction());
+        assertEquals(oldT, redone.getOldTransaction());
+        assertEquals(1, redone.getIndex());
+    }
+
+    @Test
+    public void recordEdit_clearsRedoStack() throws MoneyBagProMaxException {
+        UndoRedoManager manager = new UndoRedoManager();
+        Transaction t = sampleTransaction();
+        manager.recordAdd(t, 0);
+        manager.getUndoAction();
+        assertTrue(manager.canRedo());
+        
+        Transaction newT = new Expense("transport", 25.00, "taxi", LocalDate.of(2026, 3, 21));
+        manager.recordEdit(t, newT, 0);
+        assertFalse(manager.canRedo());
+    }
+    
+    @Test
     public void undoOnEmptyStack_throwsException() {
         UndoRedoManager manager = new UndoRedoManager();
         MoneyBagProMaxException e = assertThrows(MoneyBagProMaxException.class, manager::getUndoAction);

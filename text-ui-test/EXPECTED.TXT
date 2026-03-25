@@ -89,11 +89,15 @@ Enter a command: ============================================================
 7. Delete      : `delete [ENTRY INDEX]`
                  - Deletes a transaction using its number from the `list`.
                  - Example: delete 3
-8. Undo        : `undo`
+8. Edit        : `edit [INDEX] [category]/PRICE [desc/DESCRIPTION] [d/YYYY-MM-DD]`
+                 - Replaces a transaction at INDEX with the new values.
+                 - Same category/price/desc/date format as `add`.
+                 - Example: edit 3 food/20 desc/dinner d/2026-03-20
+9. Undo        : `undo`
                  - Reverses the last add or delete action.
-9. Redo        : `redo`
+10. Redo        : `redo`
                  - Re-applies the last undone action.
-10. Exit       : `exit`
+11. Exit       : `exit`
                  - Exits the program.
 ============================================================
 
