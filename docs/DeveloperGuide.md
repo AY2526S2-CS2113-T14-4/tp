@@ -114,6 +114,98 @@ Both commands adhere to the application's Command pattern structure. The diagram
 
 ---
 
+## Income Class
+
+### Overview
+The `Income` class represents an income transaction in the application.
+It extends the abstract `Transaction` class, alongside `Expense`, sharing common fields: `category`, `amount`, `description`, and `date`.
+
+### Design
+`Income` enforces a fixed set of valid categories defined as a static list:
+
+| Category | Description |
+|---|---|
+| `salary` | Regular employment income |
+| `freelance` | Contract or freelance work |
+| `investment` | Returns from investments |
+| `business` | Business revenue |
+| `gift` | Monetary gifts received |
+| `misc` | Any other income |
+
+Category validity is enforced via an assertion in the constructor, consistent with the defensive programming approach used elsewhere in the codebase.
+Logging is configured at `WARNING` level to reduce noise during normal operation.
+
+### Key Methods
+- `getType()` — returns `"income"`, used to distinguish transaction types polymorphically at runtime.
+- `toString()` — formats the transaction for display (e.g. `[Income] salary "June paycheck" $3000.00 (2026-06-01)`).
+
+### Design Considerations
+The `Income` and `Expense` classes are intentionally kept symmetric in structure.
+Both extend `Transaction` and override `getType()` and `toString()`, making it straightforward to introduce new transaction types in future by simply extending `Transaction` and implementing these methods.
+Keeping the valid category list as a `static final` field on the class (rather than in the `Parser` or elsewhere) ensures validation logic stays close to the data it governs.
+
+### Alternatives Considered
+One alternative was to represent transaction types using an enum field on a single `Transaction` class rather than separate subclasses.
+However, using subclasses allows each type to define its own valid categories and formatting logic independently, which is more extensible as the application grows.
+
+### Future Improvements
+- Allow user-defined custom categories beyond the fixed list.
+- Add support for recurring income entries (e.g. monthly salary auto-logged).
+
+---
+
+## Persistent Storage Feature
+
+### Overview
+The persistent storage feature allows transactions to be saved across sessions so that user data is not lost when the application exits.
+The `Storage` class is responsible for reading from and writing to a flat file (`data/transactions.txt`) on disk.
+It is invoked on startup to reload saved transactions, and after every mutating command to persist the latest state.
+
+### Architecture and Flow
+The `Storage` class operates independently of the command pipeline and is called directly by the main application loop.
+On startup, `Storage.load()` reads the data file line by line, parses each transaction record, and populates the `TransactionList`.
+After any command that modifies the list (add, delete, etc.), `Storage.save()` serializes the entire `TransactionList` back to disk atomically using a temporary file, replacing the previous file only once the write succeeds.
+
+### Sequence Diagram for Load
+![Storage Load Sequence Diagram](diagrams/StorageLoadSequenceDiagram.png)
+
+### Loading Transactions
+On startup, `load()` ensures the `data/` directory and `transactions.txt` file exist, creating them if necessary.
+It then reads all lines from the file, skipping any that do not begin with the `[TXN]` prefix.
+Each valid line is parsed by `parseLine()` into a key-value map of fields (`type`, `category`, `amount`, `description`, `date`).
+The appropriate `Transaction` subclass — either `Income` or `Expense` — is instantiated and added to the `TransactionList`.
+Malformed lines are skipped with a warning rather than halting the application, so a single corrupt entry does not prevent the rest of the data from loading.
+
+### Sequence Diagram for Save
+![Storage Save Sequence Diagram](diagrams/StorageSaveSequenceDiagram.png)
+
+### Saving Transactions
+`save()` serializes every transaction in the list into a pipe-delimited string via `serializeLine()`, producing lines of the form:
+```
+[TXN] | type=income | category=food | amount=12.5 | description=lunch | date=2026-03-25
+```
+The lines are first written to a temporary file (`transactions.txt.tmp`), which is then atomically moved to replace `transactions.txt`.
+This two-step write ensures that a crash or interruption during saving cannot corrupt the existing data file.
+
+### Class Diagram
+![Storage Class Diagram](diagrams/StorageClassDiagram.png)
+
+### Design Considerations
+The `Storage` class is decoupled from the command classes and interacts only with `TransactionList`, keeping concerns cleanly separated.
+Atomic saves via a temporary file were chosen to protect data integrity — a partial write leaves the previous file intact.
+The pipe-delimited `[TXN] | key=value` format is human-readable and easy to extend with new fields without breaking backward compatibility, since fields are parsed by name rather than by position.
+Assertions are used throughout to enforce preconditions such as non-null inputs and positive amounts, consistent with the defensive programming approach used elsewhere in the codebase.
+
+### Alternatives Considered
+One alternative was to store transactions in JSON format, which would provide a more structured and widely recognised data format. However, this would require importing a third-party JSON library, introducing an external dependency for a task that a simple custom parser can handle adequately.
+Another alternative was a database such as SQLite, but this was considered overkill for an application that only needs to persist a flat list of transactions with no relational queries.
+The plain-text pipe-delimited format was chosen for its simplicity, zero external dependencies, and ease of manual inspection or editing if needed.
+
+### Future Improvements
+Possible future improvements include supporting multiple save files or profiles, compressing the data file for large transaction histories, and adding a backup rotation strategy to retain recent snapshots in case of data corruption.
+
+---
+
 ## Product scope
 ### Target user profile
 

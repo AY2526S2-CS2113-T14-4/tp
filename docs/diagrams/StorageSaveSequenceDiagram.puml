@@ -1,0 +1,30 @@
+@startuml StorageSaveSequenceDiagram
+skinparam sequenceArrowThickness 2
+skinparam roundcorner 5
+skinparam sequenceParticipant underline
+
+actor ":Main" as Main
+participant ":Storage" as Storage
+participant ":TransactionList" as TList
+
+Main -> Storage : save(list)
+activate Storage
+
+Storage -> Storage : createDirectories("data/")
+
+loop for each transaction in list
+    Storage -> TList : get(i)
+    TList --> Storage : t
+    Storage -> Storage : serializeLine(t)
+    activate Storage #LightGray
+    Storage --> Storage : "[TXN] | type=... | ..."
+    deactivate Storage
+end
+
+Storage -> Storage : Files.write("transactions.txt.tmp", lines)
+Storage -> Storage : Files.move(".tmp" -> "transactions.txt")
+
+Storage --> Main : (returns)
+deactivate Storage
+
+@enduml
