@@ -1,6 +1,6 @@
-# Expense Tracker User Guide #
+# MoneyBagProMax User Guide #
 
-The Expense Tracker is a personal finance management application designed to help you track your income and expenses,
+MoneyBagProMax is an Expense Tracker which is a personal finance management application designed to help you track your income and expenses,
 manage budgets, and gain insights into your spending habits via a simple application installed in the Command Line Interface (˶ᵔ ᵕ ᵔ˶)!
 
 ---
@@ -31,7 +31,7 @@ Ensure that you have Java 17 installed on your personal computer. You may downlo
 respective system [here](https://www.oracle.com/java/technologies/javase/jdk17-archive-downloads.html).
 > You may want to use SDKMAN! to manage your Java installation in the event you have multiple versions [here](https://sdkman.io/).
 
-1. Download the latest Expense Tracker JAR file from the **GitHub Releases Page**.
+1. Download the latest MoneyBagProMax JAR file from the **GitHub Releases Page**.
 2. Copy the JAR file into the folder that you want to use as the home folder for the application.
 3. Locate your JAR file and copy the filepath. Example: `/Users/{yourName}/Desktop/downloads/expense-tracker.jar`
 4. Open the command line terminal:
@@ -250,7 +250,7 @@ Filters and displays only the transactions that fall within a specified date ran
 ---
 
 ### Exiting the Application: `exit`
-Exits the Expense Tracker application.
+Exits the MoneyBagProMax application.
 
 **Format**: `exit`
 
