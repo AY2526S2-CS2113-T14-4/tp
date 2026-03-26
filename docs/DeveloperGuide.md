@@ -16,6 +16,85 @@
 ### Parser
 ### Command
 ### Ui
+### Transaction
+
+The `Transaction` class is the abstract base class shared by all transaction types in the application.
+It defines the common fields and accessor methods that `Income` and `Expense` both inherit, and
+declares the abstract `getType()` method that each subclass must implement to identify itself at runtime.
+
+The class diagram below shows the full `Transaction` hierarchy.
+
+![Transaction Class Diagram](diagrams/TransactionClassDiagram.png)
+
+**Fields defined in `Transaction`:**
+
+| Field | Type | Description |
+|---|---|---|
+| `category` | `String` | The category label for the transaction |
+| `amount` | `double` | The monetary value (must be positive) |
+| `description` | `String` | An optional description string |
+| `date` | `LocalDate` | The date of the transaction |
+
+All fields are declared `protected final`, making them accessible to subclasses but immutable after construction.
+This immutability is intentional — rather than modifying a transaction in place, the `EditCommand` removes
+the old transaction and inserts a newly constructed one at the same index.
+
+**Abstract method:**
+- `getType()` — returns a lowercase string identifying the transaction type (e.g. `"income"` or `"expense"`).
+  This is used by `SummaryCommand` to distinguish income from expense entries without relying on `instanceof` checks.
+
+## Expense Class
+
+### Overview
+The `Expense` class represents an expenditure transaction in the application.
+It extends the abstract `Transaction` class alongside `Income`, and is one of the two concrete
+transaction types that can be stored in the `TransactionList`.
+
+### Design
+`Expense` enforces a fixed set of valid categories defined as a static list:
+
+| Category | Description |
+|---|---|
+| `food` | Meals and groceries |
+| `transport` | Commuting and travel costs |
+| `utilities` | Bills such as electricity and water |
+| `education` | Tuition, books, and course fees |
+| `rent` | Accommodation payments |
+| `medical` | Healthcare and pharmacy costs |
+| `misc` | Any other expenditure |
+
+Category validity is enforced via an assertion in the constructor, consistent with the defensive
+programming approach used throughout the codebase.
+Logging is configured at `WARNING` level to reduce noise during normal operation, matching the
+convention used by `Income` and `TransactionList`.
+
+### Key Methods
+- `getType()` — returns `"expense"`, used to distinguish transaction types at runtime without `instanceof` checks.
+- `toString()` — formats the transaction for display
+  (e.g. `[Expense] food "lunch" $12.50 (2026-03-20)`). The description is omitted from the output
+  if it is an empty string, keeping the display clean for transactions logged without a description.
+
+### Design Considerations
+The `Expense` and `Income` classes are intentionally kept symmetric in structure.
+Both extend `Transaction` and override only `getType()` and `toString()`, keeping each subclass
+minimal and focused.
+Defining `VALID_CATEGORIES` as a `public static final` field on `Expense` (rather than in the
+`Parser` or a separate validator) keeps the validation rules and category data together in one place.
+This also allows `AddCommand` and `EditCommand` to reference 
+`Expense.VALID_CATEGORIES` directly when deciding which transaction type to instantiate.
+
+### Alternatives Considered
+One alternative was to consolidate `Income` and `Expense` into a single `Transaction` class
+with a `type` field (e.g. an enum of `INCOME` or `EXPENSE`). While this reduces the number of
+classes, it would require all category validation and formatting logic to branch on the type field,
+making the class harder to extend. The subclass approach allows each type to define its own
+categories and `toString()` format independently, and adding a new transaction type in future
+requires only a new subclass rather than modifying existing ones.
+
+### Future Improvements
+- Allow user-defined custom categories beyond the fixed list.
+- Add sub-categories (e.g. `food/dining-out` vs `food/groceries`) for better summaries.
+
 ### TransactionList / Storage
 # Implementation
 

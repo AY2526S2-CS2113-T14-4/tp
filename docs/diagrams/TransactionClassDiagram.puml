@@ -1,0 +1,31 @@
+@startuml
+hide circle
+skinparam classAttributeIconSize 0
+
+class "{abstract}\nTransaction" as Transaction {
+  #category: String
+  #amount: double
+  #description: String
+  #date: LocalDate
+  +getAmount(): double
+  +getCategory(): String
+  +getDescription(): String
+  +getDate(): LocalDate
+  +getType(): String
+}
+
+class Expense {
+  +{static} VALID_CATEGORIES: List<String>
+  +getType(): String
+  +toString(): String
+}
+
+class Income {
+  +{static} VALID_CATEGORIES: List<String>
+  +getType(): String
+  +toString(): String
+}
+
+Transaction <|-- Expense
+Transaction <|-- Income
+@enduml
