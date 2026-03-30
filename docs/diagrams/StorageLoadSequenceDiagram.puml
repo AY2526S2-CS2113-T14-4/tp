@@ -3,35 +3,73 @@ skinparam sequenceArrowThickness 2
 skinparam roundcorner 5
 skinparam sequenceParticipant underline
 
-actor ":Main" as Main
+participant ":MoneyBagProMax" as Main
 participant ":Storage" as Storage
+participant ":Files" as Files
 participant ":TransactionList" as TList
-participant "t:Transaction" as T
+participant ":Transaction" as T
 
 Main -> Storage : load(list)
 activate Storage
 
-Storage -> Storage : createDirectories("data/")
-Storage -> Storage : createFile("data/transactions.txt")\n[if not exists]
+Storage -> Files : createDirectories("data/")
+activate Files
+Files --> Storage
+deactivate Files
 
-loop for each line in transactions.txt
-    Storage -> Storage : parseLine(line)
-    activate Storage #LightGray
-    Storage --> Storage : fields (Map<String,String>)
-    deactivate Storage
+Storage -> Files : exists("data/transactions.txt")
+activate Files
+Files --> Storage : boolean
+deactivate Files
 
-    alt type == "income"
-        create T
-        Storage -> T : new Income(category, amount, description, date)
-    else type == "expense"
-        create T
-        Storage -> T : new Expense(category, amount, description, date)
+alt file does not exist
+    Storage -> Files : createFile("data/transactions.txt")
+    activate Files
+    Files --> Storage
+    deactivate Files
+    Storage --> Main
+else file exists
+    loop while list is not empty
+        Storage -> TList : remove(0)
+        activate TList
+        TList --> Storage
+        deactivate TList
     end
 
-    Storage -> TList : add(t)
+    Storage -> Files : readAllLines("data/transactions.txt")
+    activate Files
+    Files --> Storage : lines
+    deactivate Files
+
+    loop for each line in lines
+        opt line starts with [TXN]
+            Storage -> Storage : parseLine(line)
+            activate Storage #LightGray
+            Storage --> Storage : fields : Map
+            deactivate Storage
+        end
+    
+        opt fields is valid
+            Storage -> Storage : validateAndBuild(fields, line)
+            activate Storage #LightGray
+            Storage --> Storage : t : Transaction
+            deactivate Storage
+    
+            create T
+            Storage -> T : <<create>>
+        end
+    
+        opt t is not null
+            Storage -> TList : add(t)
+            activate TList
+            TList --> Storage
+            deactivate TList
+        end
+    end
+
+    Storage --> Main
 end
 
-Storage --> Main : (returns)
 deactivate Storage
 
 @enduml
