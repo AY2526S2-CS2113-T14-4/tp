@@ -3,28 +3,69 @@ skinparam sequenceArrowThickness 2
 skinparam roundcorner 5
 skinparam sequenceParticipant underline
 
-actor ":Main" as Main
+participant ":MoneyBagProMax" as Main
 participant ":Storage" as Storage
 participant ":TransactionList" as TList
+participant ":Transaction" as T
+participant ":Files" as Files
 
 Main -> Storage : save(list)
 activate Storage
 
-Storage -> Storage : createDirectories("data/")
+Storage -> Files : createDirectories("data/")
+activate Files
+Files --> Storage
+deactivate Files
 
 loop for each transaction in list
     Storage -> TList : get(i)
-    TList --> Storage : t
+    activate TList
+    TList --> Storage : t : Transaction
+    deactivate TList
+
     Storage -> Storage : serializeLine(t)
     activate Storage #LightGray
-    Storage --> Storage : "[TXN] | type=... | ..."
+
+    Storage -> T : getType()
+    activate T
+    T --> Storage : type
+    deactivate T
+
+    Storage -> T : getCategory()
+    activate T
+    T --> Storage : category
+    deactivate T
+
+    Storage -> T : getAmount()
+    activate T
+    T --> Storage : amount
+    deactivate T
+
+    Storage -> T : getDescription()
+    activate T
+    T --> Storage : description
+    deactivate T
+
+    Storage -> T : getDate()
+    activate T
+    T --> Storage : date
+    deactivate T
+
+    Storage --> Storage : line : String
     deactivate Storage
 end
 
-Storage -> Storage : Files.write("transactions.txt.tmp", lines)
-Storage -> Storage : Files.move(".tmp" -> "transactions.txt")
+Storage -> Files : write(tmp, lines)
+activate Files
+Files --> Storage
+deactivate Files
 
-Storage --> Main : (returns)
+Storage -> Files : move(tmp, target)
+activate Files
+Files --> Storage
+deactivate Files
+
+Storage --> Main
 deactivate Storage
 
 @enduml
