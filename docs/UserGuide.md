@@ -78,12 +78,15 @@ respective system [here](https://www.oracle.com/java/technologies/javase/jdk17-a
 ---
 
 ### Listing all Transactions: `list`
-(// add description here)
+Displays all recorded transactions in a numbered list.
 
-**Format**:
+**Format**: list
 
 **Examples**:
+- `list` Displays all transactions currently stored in the application.
 
+> [!NOTE] 
+> If there are no transactions recorded, the application will show an empty-list message instead.
 ---
 
 ### Finding a Transaction: `find`
@@ -124,12 +127,15 @@ Displays overall totals or specific category totals for your transactions.
 ---
 
 ### Deleting a Transaction: `delete`
-(// add description here)
+Deletes the transaction at the specified index in the displayed list.
 
 **Format**: `delete ENTRY_INDEX`
 
 **Examples**:
+- `delete 3` Deletes the 3rd transaction in the list.
 
+> [!NOTE]
+> The index must be a valid positive integer corresponding to an existing transaction.
 ---
 
 ### Editing a Transaction: `edit`
@@ -159,21 +165,42 @@ Displays overall totals or specific category totals for your transactions.
 ---
 
 ### Managing your Budget: `budget`
-(// add description here)
+Allows you to set a monthly budget and check your current budget usage.
 
 **Format**:
+- `budget set AMOUNT`
+- `budget status`
 
 **Examples**:
+- `budget set 1000` Sets your monthly budget to $1000.
+- `budget status` Displays the current monthly budget, total spent for the month, remaining budget, and percentage used.
 
+> [!NOTE]
+> Budget usage is calculated using expense transactions from the current month only.
 ---
 
 ### Viewing Spending Statistics: `stats`
-(// add description here)
+Displays spending analytics for recorded transactions.
+
+The statistics include:
+- total income
+- total expense
+- highest expense
+- lowest expense
+- highest income
+- most frequent expense category
+- average spending per category
+- spending trend
+- budget usage percentage
 
 **Format**:
+- `stats`
 
 **Examples**:
+- `stats` Displays the full statistics summary for all recorded transactions.
 
+> [!NOTE]
+> General statistics are based on all recorded transactions, while budget usage is based on the current month's expenses.
 ---
 
 ### Filtering Transactions: `filter`
