@@ -118,11 +118,22 @@ Displays overall totals or specific category totals for your transactions.
 ---
 
 ### Sorting Transactions: `sort`
-(// add description here)
+Displays transactions sorted by the specified criterion. The underlying list order is **not changed** — this is a display-only operation.
 
-**Format**:
+**Format**: `sort by/CRITERIA`
+
+**Valid criteria:**
+- `date` — ascending (earliest first)
+- `amount` — descending (largest first)
+- `category` — alphabetical A–Z (case-insensitive)
 
 **Examples**:
+- `sort by/date` — shows all transactions from earliest to latest.
+- `sort by/amount` — shows all transactions from highest to lowest amount.
+- `sort by/category` — shows all transactions sorted alphabetically by category.
+
+> [!NOTE]
+> Sort does not change the indices used by `delete` and `edit`. Use `list` to see the original insertion order.
 
 ---
 
@@ -147,20 +158,28 @@ Deletes the transaction at the specified index in the displayed list.
 ---
 
 ### Undoing an Action: `undo`
-(// add description here)
+Reverses the last mutating command (`add`, `delete`, or `edit`). Can be called repeatedly to step back through history.
 
-**Format**:
+**Format**: `undo`
 
 **Examples**:
+- `undo` — reverses the last add, delete, or edit operation.
+
+> [!NOTE]
+> Undo history is reset when you exit the application. Only `add`, `delete`, and `edit` are undoable.
 
 ---
 
 ### Redoing an Action: `redo`
-(// add description here)
+Re-applies the last undone action. Only available immediately after an `undo`.
 
-**Format**:
+**Format**: `redo`
 
 **Examples**:
+- `redo` — re-applies the last undone operation.
+
+> [!NOTE]
+> Performing any new mutating command (`add`/`delete`/`edit`) after an `undo` clears the redo history.
 
 ---
 
