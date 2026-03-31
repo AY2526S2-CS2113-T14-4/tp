@@ -18,6 +18,7 @@ import seedu.duke.command.BudgetCommand;
 import seedu.duke.command.StatsCommand;
 import seedu.duke.command.FilterCommand;
 import seedu.duke.command.ExportCsvCommand;
+import seedu.duke.command.ExportTxtCommand;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
@@ -89,6 +90,11 @@ public class Parser {
                 throw new MoneyBagProMaxException("Usage: export-csv FILEPATH");
             }
             return new ExportCsvCommand(arguments);
+        case "export-data":
+            if (arguments.isEmpty()) {
+                throw new MoneyBagProMaxException("Usage: export-data FILEPATH");
+            }
+            return new ExportTxtCommand(arguments);
         default:
             throw new MoneyBagProMaxException("Unknown command. Type `help` to see the list of available commands.");
         }
