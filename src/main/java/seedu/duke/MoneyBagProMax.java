@@ -7,6 +7,8 @@ import seedu.duke.storage.Storage;
 import seedu.duke.transactionlist.TransactionList;
 import seedu.duke.ui.Ui;
 import seedu.duke.undoredo.UndoRedoManager;
+import seedu.duke.category.CategoryManager;
+
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -26,6 +28,7 @@ public class MoneyBagProMax {
         logger.info("Starting the MoneyBagProMax application...");
         TransactionList list = new TransactionList();
         Storage storage = new Storage();
+        CategoryManager.getInstance().load();
         storage.load(list);
         UndoRedoManager undoRedoManager = new UndoRedoManager();
         Parser parser = new Parser(undoRedoManager);

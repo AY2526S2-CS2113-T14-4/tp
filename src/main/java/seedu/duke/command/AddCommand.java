@@ -7,6 +7,7 @@ import seedu.duke.transaction.Transaction;
 import seedu.duke.transactionlist.TransactionList;
 import seedu.duke.ui.Ui;
 import seedu.duke.undoredo.UndoRedoManager;
+import seedu.duke.category.CategoryManager;
 
 import java.time.LocalDate;
 
@@ -36,7 +37,7 @@ public class AddCommand extends Command {
         Transaction transaction = null;
         if (Income.VALID_CATEGORIES.contains(category.toLowerCase())) {
             transaction = new Income(category, amount, description, date);
-        } else if (Expense.VALID_CATEGORIES.contains(category.toLowerCase())) {
+        } else if (CategoryManager.getInstance().isValidExpenseCategory(category)) {
             transaction = new Expense(category, amount, description, date);
         }
 
@@ -46,8 +47,9 @@ public class AddCommand extends Command {
             ui.showMessage("Added: " + transaction);
         } else {
             ui.showMessage("Invalid category '" + category + "'."
-                                   + " Valid expense categories: " + Expense.VALID_CATEGORIES
-                                   + " Valid income categories: " + Income.VALID_CATEGORIES);
+                    + " Valid expense categories: "
+                    + CategoryManager.getInstance().getAllExpenseCategories()
+                    + " Valid income categories: " + Income.VALID_CATEGORIES);
         }
     }
 

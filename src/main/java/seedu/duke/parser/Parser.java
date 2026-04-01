@@ -19,6 +19,7 @@ import seedu.duke.command.StatsCommand;
 import seedu.duke.command.FilterCommand;
 import seedu.duke.command.ExportCsvCommand;
 import seedu.duke.command.ExportTxtCommand;
+import seedu.duke.command.CategoryCommand;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
@@ -94,6 +95,8 @@ public class Parser {
                 throw new MoneyBagProMaxException("Usage: export-data FILEPATH");
             }
             return new ExportTxtCommand(arguments);
+        case "category":
+            return parseCategoryCommand(arguments);
         default:
             throw new MoneyBagProMaxException("Unknown command. Type `help` to see the list of available commands.");
         }
@@ -336,5 +339,30 @@ public class Parser {
             return new SummaryCommand("month", datePart);
         }
         return new SummaryCommand(arguments);
+    }
+
+    private Command parseCategoryCommand(String args) throws MoneyBagProMaxException {
+        if (args.equals("list")) {
+            return new CategoryCommand("list", "");
+        }
+        if (args.startsWith("add/")) {
+            String name = args.substring("add/".length()).trim().toLowerCase();
+            if (name.isEmpty()) {
+                throw new MoneyBagProMaxException("Usage: category add/NAME");
+            }
+            return new CategoryCommand("add", name);
+        }
+        if (args.startsWith("remove/")) {
+            String name = args.substring("remove/".length()).trim().toLowerCase();
+            if (name.isEmpty()) {
+                throw new MoneyBagProMaxException("Usage: category remove/NAME");
+            }
+            return new CategoryCommand("remove", name);
+        }
+        throw new MoneyBagProMaxException(
+                "Invalid category command. Usage:\n"
+                        + "  category add/NAME\n"
+                        + "  category remove/NAME\n"
+                        + "  category list");
     }
 }

@@ -17,3 +17,4 @@ bin/
 text-ui-test/EXPECTED-UNIX.TXT
 text-ui-test/EXPECTED-RESOLVED.TXT
 /data/transactions.txt
+/data/categories.txt
