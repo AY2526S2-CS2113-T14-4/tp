@@ -1,6 +1,5 @@
 # Zhu Yicheng - Project Portfolio Page
 
-
 ## Project: MoneyBagProMax
 MoneyBagProMax is a command-line personal finance management application designed to help users track income and expenses, manage budgets, and gain insights into spending habits through financial statistics. The user interacts with it using a CLI, and the application is written in Java.
 Given below are my contributions to the project.
@@ -12,18 +11,18 @@ Given below are my contributions to the project.
 What it does:
 Provides the abstract base class shared by all transaction types in the application. It defines the four common fields (`category`, `amount`, `description`, `date`), their accessor methods, and the abstract `getType()` method that each subclass must implement.
 Justification:
-Centralising the shared state in a single abstract class eliminates field duplication between `Income` and `Expense`, and allows the rest of the application to operate on a single `Transaction` type without needing instanceof checks.
+Centralising the shared state in a single abstract class eliminates field duplication between `Income` and `Expense`, and allows the rest of the application to operate on a single `Transaction` type without needing `instanceof` checks.
 Highlights:
-All fields are declared `protected final`, making them immutable after construction. This was an intentional design choice: rather than mutating fields in place, editing a transaction requires constructing a new object and swapping it into the list. 
+All fields are declared `protected final`, making them immutable after construction. Rather than mutating fields in place, editing a transaction requires constructing a new object and swapping it into the list. 
 ---
 
 ### New Feature: Expense Class
 What it does:
 Represents an expenditure transaction. Extends Transaction and defines seven valid expense categories: food, transport, utilities, education, rent, medical, and misc. The formatted display (e.g. [Expense] food "lunch" $12.50 (2026-03-20)) omits the description if it is empty, keeping output clean.
 Justification:
-A dedicated Expense subclass keeps category validation and formatting logic close to the data it governs. Exposing VALID_CATEGORIES as a public static final field allows AddCommand and EditCommand to reference it directly when deciding which transaction type to instantiate, without coupling those commands to the Parser.
+A dedicated Expense subclass keeps the category list and formatting logic together in one place. Exposing VALID_CATEGORIES as a public static final field allows AddCommand and EditCommand to reference it directly when deciding which transaction type to instantiate, without coupling those commands to the Parser.
 Highlights:
-Category validity is enforced at construction time via an assertion, consistent with the defensive programming approach used across the codebase. The class is intentionally kept symmetric with Income — both override only getType() and toString() — making it straightforward to introduce new transaction types in future by adding a new subclass.
+Category validity is enforced at construction time via an assertion, matching how the rest of the codebase handles invalid input. It mirrors the structure of `Income` so adding a new transaction type only requires a new subclass.
 ---
 
 ### Enhancements Implemented:
