@@ -97,7 +97,7 @@ public class Parser {
         try {
             String category = parts[0].trim();
             String remainder = parts[1].trim();
-            
+
             assert !category.isEmpty() : "Category is blank after trimming in input: " + args;
             assert !remainder.isEmpty() : "Remainder after category slash is empty in input: " + args;
 
@@ -107,11 +107,11 @@ public class Parser {
 
             assert amount > 0 : "Parsed amount is not positive: " + amount;
             assert Double.isFinite(amount) : "Parsed amount is infinite or NaN: " + amount;
-            assert !date.isBefore(LocalDate.of(1900, 1, 1)) : 
+            assert !date.isBefore(LocalDate.of(1900, 1, 1)) :
                     "Parsed date is before year 1900, likely a typo: " + date;
-            
+
             return new AddCommand(category, amount, description, date, undoRedoManager);
-            
+
         } catch (NumberFormatException e) {
             throw new MoneyBagProMaxException("Invalid price.");
         }
@@ -238,7 +238,7 @@ public class Parser {
         }
         throw new MoneyBagProMaxException("Unknown budget command.");
     }
-  
+
     private Command parseEditCommand(String args) throws MoneyBagProMaxException {
         String[] parts = args.split(" ", 2);
         if (parts.length < 2) {
@@ -253,7 +253,6 @@ public class Parser {
             throw new MoneyBagProMaxException("Invalid index. Use: edit INDEX [category]/PRICE ...");
         }
 
-        // Reuse the same parsing logic as parseAddCommand by splitting on the first "/"
         String remainder = parts[1].trim();
         String[] categoryAndRest = remainder.split("/", 2);
         if (categoryAndRest.length < 2) {
@@ -304,7 +303,7 @@ public class Parser {
 
         } catch (DateTimeParseException e) {
             throw new MoneyBagProMaxException("Invalid date format — expected YYYY-MM-DD. "
-                            + "Use: filter from/YYYY-MM-DD to/YYYY-MM-DD");
+                    + "Use: filter from/YYYY-MM-DD to/YYYY-MM-DD");
         } catch (IndexOutOfBoundsException e) {
             throw new MoneyBagProMaxException("Missing date values! "
                     + "Use: filter from/YYYY-MM-DD to/YYYY-MM-DD");

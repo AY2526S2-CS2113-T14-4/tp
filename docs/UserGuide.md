@@ -60,13 +60,17 @@ respective system [here](https://www.oracle.com/java/technologies/javase/jdk17-a
 ---
 
 ### Adding an Expense: `add [expense-category]`
-(// add description here)
+Adds an expense by the given category, amount, optional description and optional date.
 
-**Format**:
+**Format**: `add EXPENSE_CATEGORY/PRICE [desc/DESCRIPTION] [d/YYYY-MM-DD]`
 
 **Examples**:
+- `add food/10` Adds a food expense of $10.00 with no description, dated today.
+- `add transport/3.50 desc/bus ride` Adds a transport expense of $3.50 with the description *"bus ride"*, dated today.
+- `add medical/25 desc/checkup d/2026-03-01` Adds a medical expense of $25.00 with the description *"checkup"*, dated 1st March 2026.
 
----
+> [!NOTE]
+> If the date is omitted, it defaults to today's date. If the description is omitted, the transaction is recorded without one.
 
 ### Adding an Income: `add [income-category]`
 (// add description here)
@@ -118,11 +122,22 @@ Displays overall totals or specific category totals for your transactions.
 ---
 
 ### Sorting Transactions: `sort`
-(// add description here)
+Displays transactions sorted by the specified criterion. The underlying list order is **not changed** — this is a display-only operation.
 
-**Format**:
+**Format**: `sort by/CRITERIA`
+
+**Valid criteria:**
+- `date` — ascending (earliest first)
+- `amount` — descending (largest first)
+- `category` — alphabetical A–Z (case-insensitive)
 
 **Examples**:
+- `sort by/date` — shows all transactions from earliest to latest.
+- `sort by/amount` — shows all transactions from highest to lowest amount.
+- `sort by/category` — shows all transactions sorted alphabetically by category.
+
+> [!NOTE]
+> Sort does not change the indices used by `delete` and `edit`. Use `list` to see the original insertion order.
 
 ---
 
@@ -139,7 +154,17 @@ Deletes the transaction at the specified index in the displayed list.
 ---
 
 ### Editing a Transaction: `edit`
-(// add description here)
+Replaces an existing transaction at the specified index with new values.
+All fields must be provided — the edit replaces the entire transaction, not individual fields.
+
+**Format**: `edit ENTRY_INDEX CATEGORY/PRICE [desc/DESCRIPTION] [d/YYYY-MM-DD]`
+
+**Examples**:
+- `edit 2 food/15` Replaces the 2nd transaction with a food expense of $15.00, dated today.
+- `edit 1 salary/3000 desc/march pay d/2026-03-01` Replaces the 1st transaction with a salary income of $3000.00 with the description *"march pay"*, dated 1st March 2026.
+
+> [!NOTE]
+> Use `list` first to confirm the index of the transaction you want to edit. The edit can be reversed with `undo`.
 
 **Format**:
 
@@ -147,20 +172,28 @@ Deletes the transaction at the specified index in the displayed list.
 ---
 
 ### Undoing an Action: `undo`
-(// add description here)
+Reverses the last mutating command (`add`, `delete`, or `edit`). Can be called repeatedly to step back through history.
 
-**Format**:
+**Format**: `undo`
 
 **Examples**:
+- `undo` — reverses the last add, delete, or edit operation.
+
+> [!NOTE]
+> Undo history is reset when you exit the application. Only `add`, `delete`, and `edit` are undoable.
 
 ---
 
 ### Redoing an Action: `redo`
-(// add description here)
+Re-applies the last undone action. Only available immediately after an `undo`.
 
-**Format**:
+**Format**: `redo`
 
 **Examples**:
+- `redo` — re-applies the last undone operation.
+
+> [!NOTE]
+> Performing any new mutating command (`add`/`delete`/`edit`) after an `undo` clears the redo history.
 
 ---
 

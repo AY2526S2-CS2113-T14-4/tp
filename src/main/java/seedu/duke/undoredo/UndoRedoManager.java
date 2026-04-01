@@ -61,7 +61,14 @@ public class UndoRedoManager {
 
     private final Deque<ActionPair> undoStack = new ArrayDeque<>();
     private final Deque<ActionPair> redoStack = new ArrayDeque<>();
-    
+
+    /**
+     * Records an edit action. Clears the redo stack since a new action.
+     * invalidates any previously undone actions.
+     * @param oldTransaction the transaction before being edited.
+     * @param newTransaction the transaction after being edited.
+     * @param index the index of the transaction being edited.
+     */
     public void recordEdit(Transaction oldTransaction, Transaction newTransaction, int index) {
         assert oldTransaction != null : "Old transaction should not be null";
         assert newTransaction != null : "New transaction should not be null";
