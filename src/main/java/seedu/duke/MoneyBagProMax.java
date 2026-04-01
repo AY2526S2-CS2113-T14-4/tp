@@ -36,15 +36,14 @@ public class MoneyBagProMax {
         Ui ui = new Ui();
         Budget budget = new Budget();
         logger.info("Core components: TransactionList, Parser, UndoRedoManager and Ui initialised successfully.");
+        ui.showWelcomeMessage();
         try {
             new GenerateRecurringCommand(recurringList).execute(list, budget, ui);
-            if (!recurringList.isEmpty()) {
-                storage.saveRecurring(recurringList);
-            }
+            storage.saveRecurring(recurringList);
+            storage.save(list);
         } catch (MoneyBagProMaxException e) {
-            logger.log(Level.WARNING, "Failed to auto-generate recurring transactions on startup: " + e.getMessage());
+            logger.log(Level.WARNING, "Startup recurring transaction processing failed: " + e.getMessage());
         }
-        ui.showWelcomeMessage();
         boolean isExit = false;
 
         while (!isExit) {
