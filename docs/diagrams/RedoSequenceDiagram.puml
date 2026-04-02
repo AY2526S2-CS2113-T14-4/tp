@@ -1,4 +1,5 @@
 @startuml
+skinparam sequenceParticipant none
 actor User
 participant ":Ui" as Ui
 participant ":Parser" as Parser
@@ -7,22 +8,55 @@ participant ":UndoRedoManager" as UndoRedoManager
 participant ":TransactionList" as TransactionList
 
 User -> Ui : enter "redo"
+activate Ui
+
 Ui -> Parser : parse("redo")
+activate Parser
 Parser --> Ui : RedoCommand
+deactivate Parser
+
 Ui -> RedoCommand : execute(list, budget, ui)
+activate RedoCommand
+
 RedoCommand -> UndoRedoManager : getRedoAction()
+activate UndoRedoManager
 note right of UndoRedoManager : Pops from redoStack,\npushes to undoStack
 UndoRedoManager --> RedoCommand : ActionPair
+deactivate UndoRedoManager
 
 alt action type is ADD
     RedoCommand -> TransactionList : insert(index, transaction)
+    activate TransactionList
+    TransactionList --> RedoCommand
+    deactivate TransactionList
     RedoCommand -> Ui : showMessage("Redo: Re-added ...")
+    activate Ui #LightGray
+    Ui --> RedoCommand
+    deactivate Ui
 else action type is DELETE
     RedoCommand -> TransactionList : remove(index)
+    activate TransactionList
+    TransactionList --> RedoCommand
+    deactivate TransactionList
     RedoCommand -> Ui : showMessage("Redo: Re-deleted ...")
+    activate Ui #LightGray
+    Ui --> RedoCommand
+    deactivate Ui
 else action type is EDIT
     RedoCommand -> TransactionList : remove(index)
+    activate TransactionList
+    TransactionList --> RedoCommand
+    deactivate TransactionList
     RedoCommand -> TransactionList : insert(index, newTransaction)
+    activate TransactionList
+    TransactionList --> RedoCommand
+    deactivate TransactionList
     RedoCommand -> Ui : showMessage("Redo: Re-applied edit ...")
+    activate Ui #LightGray
+    Ui --> RedoCommand
+    deactivate Ui
 end
+
+deactivate RedoCommand
+deactivate Ui
 @enduml

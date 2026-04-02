@@ -1,4 +1,5 @@
 @startuml
+skinparam sequenceParticipant none
 actor User
 participant ":Ui" as Ui
 participant ":Parser" as Parser
@@ -6,22 +7,53 @@ participant ":SortCommand" as SortCommand
 participant ":TransactionList" as TransactionList
 
 User -> Ui : enter "sort by/date"
+activate Ui
+
 Ui -> Parser : parse("sort by/date")
+activate Parser
+
 Parser -> Parser : parseSortCommand("by/date")
+activate Parser #LightGray
+Parser --> Parser
+deactivate Parser
+
 Parser --> Ui : SortCommand
+deactivate Parser
+
 Ui -> SortCommand : execute(list, budget, ui)
+activate SortCommand
+
 SortCommand -> TransactionList : isEmpty()
+activate TransactionList
+TransactionList --> SortCommand
+deactivate TransactionList
 
 alt list is empty
     SortCommand -> Ui : showMessage("No transactions found.")
+    activate Ui #LightGray
+    Ui --> SortCommand
+    deactivate Ui
 else list not empty
     SortCommand -> SortCommand : create Comparator
+    activate SortCommand #LightGray
     note right of SortCommand : Comparator.comparing(\nTransaction::getDate)
+    SortCommand --> SortCommand
+    deactivate SortCommand
+
     SortCommand -> TransactionList : getSortedList(comparator)
+    activate TransactionList
     note right of TransactionList : Creates defensive copy,\nsorts, returns sorted list
     TransactionList --> SortCommand : sortedList
+    deactivate TransactionList
+
     loop for each sorted transaction
         SortCommand -> Ui : showMessage(...)
+        activate Ui #LightGray
+        Ui --> SortCommand
+        deactivate Ui
     end
 end
+
+deactivate SortCommand
+deactivate Ui
 @enduml

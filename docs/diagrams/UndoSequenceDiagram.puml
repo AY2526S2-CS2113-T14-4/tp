@@ -1,4 +1,5 @@
 @startuml
+skinparam sequenceParticipant none
 actor User
 participant ":Ui" as Ui
 participant ":Parser" as Parser
@@ -7,22 +8,55 @@ participant ":UndoRedoManager" as UndoRedoManager
 participant ":TransactionList" as TransactionList
 
 User -> Ui : enter "undo"
+activate Ui
+
 Ui -> Parser : parse("undo")
+activate Parser
 Parser --> Ui : UndoCommand
+deactivate Parser
+
 Ui -> UndoCommand : execute(list, budget, ui)
+activate UndoCommand
+
 UndoCommand -> UndoRedoManager : getUndoAction()
+activate UndoRedoManager
 note right of UndoRedoManager : Pops from undoStack,\npushes to redoStack
 UndoRedoManager --> UndoCommand : ActionPair
+deactivate UndoRedoManager
 
 alt action type is ADD
     UndoCommand -> TransactionList : remove(index)
+    activate TransactionList
+    TransactionList --> UndoCommand
+    deactivate TransactionList
     UndoCommand -> Ui : showMessage("Undo: Removed ...")
+    activate Ui #LightGray
+    Ui --> UndoCommand
+    deactivate Ui
 else action type is DELETE
     UndoCommand -> TransactionList : insert(index, transaction)
+    activate TransactionList
+    TransactionList --> UndoCommand
+    deactivate TransactionList
     UndoCommand -> Ui : showMessage("Undo: Restored ...")
+    activate Ui #LightGray
+    Ui --> UndoCommand
+    deactivate Ui
 else action type is EDIT
     UndoCommand -> TransactionList : remove(index)
+    activate TransactionList
+    TransactionList --> UndoCommand
+    deactivate TransactionList
     UndoCommand -> TransactionList : insert(index, oldTransaction)
+    activate TransactionList
+    TransactionList --> UndoCommand
+    deactivate TransactionList
     UndoCommand -> Ui : showMessage("Undo: Reverted edit ...")
+    activate Ui #LightGray
+    Ui --> UndoCommand
+    deactivate Ui
 end
+
+deactivate UndoCommand
+deactivate Ui
 @enduml
