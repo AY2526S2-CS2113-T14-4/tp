@@ -22,8 +22,7 @@ The `Transaction` class is the abstract base class shared by all transaction typ
 It defines the common fields and accessor methods that `Income` and `Expense` both inherit, and
 declares the abstract `getType()` method that each subclass must implement to identify itself at runtime.
 
-The class diagram below shows the full `Transaction` hierarchy.
-
+### Class Diagram
 ![Transaction Class Diagram](diagrams/TransactionClassDiagram.png)
 
 **Fields defined in `Transaction`:**
@@ -53,18 +52,16 @@ transaction types that can be stored in the `TransactionList`.
 ### Design
 `Expense` enforces a fixed set of valid categories defined as a static list:
 
-| Category | Description |
-|---|---|
-| `food` | Meals and groceries |
+| Category   | Description |
+|------------|---|
+| `food`     | Meals and groceries |
 | `transport` | Commuting and travel costs |
 | `utilities` | Bills such as electricity and water |
 | `education` | Tuition, books, and course fees |
-| `rent` | Accommodation payments |
-| `medical` | Healthcare and pharmacy costs |
-| `misc` | Any other expenditure |
+| `rent`     | Accommodation payments |
+| `medical`  | Healthcare and pharmacy costs |
+| `misc`     | Any other expenditure |
 
-Category validity is enforced via an assertion in the constructor, consistent with the defensive
-programming approach used throughout the codebase.
 Logging is configured at `WARNING` level to reduce noise during normal operation, matching the
 convention used by `Income` and `TransactionList`.
 
@@ -94,6 +91,46 @@ requires only a new subclass rather than modifying existing ones.
 ### Future Improvements
 - Allow user-defined custom categories beyond the fixed list.
 - Add sub-categories (e.g. `food/dining-out` vs `food/groceries`) for better summaries.
+
+---
+
+## CategoryManager
+
+### Overview
+`CategoryManager` is a singleton that manages user-defined custom expense categories alongside
+the built-in ones in `Expense.VALID_CATEGORIES`. Custom categories are persisted to
+`data/categories.txt` and survive across sessions.
+
+### Design
+The singleton is initialised in `main` before `Storage.load()`. This ordering is required
+because `Storage` reconstructs `Expense` objects from disk, and the `Expense` constructor must
+already recognise any custom categories from the previous session.
+
+Custom categories are stored as a `LinkedHashSet<String>` (lowercase, insertion-ordered) and
+written to disk using the same temp-file-then-move pattern as `Storage`.
+
+### Class Diagram
+![CategoryManager Class Diagram](diagrams/CategoryClassDiagram.png)
+### Key Methods
+
+| Method                             | Description                                                  |
+|------------------------------------|--------------------------------------------------------------|
+| `load()`                           | Reads `data/categories.txt` on startup                       |
+| `addCustomCategory(name)`          | Adds a category; returns `false` if already exists           |
+| `removeCustomCategory(name)`       | Removes a category; returns `false` if not found or built-in |
+| `isValidExpenseCategory(category)` | `true` if built-in or user-defined                           |
+| `getAllExpenseCategories()`        | Built-ins first, then custom in insertion order              |
+| `getCustomCategories()`            | Defensive copy of custom categories only                     |
+
+### Design Considerations
+- **Singleton:** `CategoryManager` is referenced inside the `Expense` constructor, which has
+  no other way to receive it. Dependency injection would require changes across the entire
+  constructor chain.
+- **Built-ins are never written to disk:** Only user-added categories go into `categories.txt`.
+  Built-ins are implicitly protected — `removeCustomCategory` only searches the custom set,
+  so built-ins always return `false`.
+
+---
 
 ### TransactionList / Storage
 # Implementation

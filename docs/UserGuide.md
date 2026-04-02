@@ -19,6 +19,7 @@ manage budgets, and gain insights into your spending habits via a simple applica
     - [Undoing an Action: `undo`](#undoing-an-action-undo)
     - [Redoing an Action: `redo`](#redoing-an-action-redo)
     - [Managing your Budget: `budget`](#managing-your-budget-budget)
+    - [Managing Custom Categories: `category`](#managing-custom-categories-category)
     - [Viewing Spending Statistics: `stats`](#viewing-spending-statistics-stats)
     - [Adding a Recurring Transaction: `add ... rec/FREQUENCY`](#adding-a-recurring-transaction-add--recfrequency)
     - [Listing Recurring Transactions: `list-rec`](#listing-recurring-transactions-list-rec)
@@ -244,6 +245,30 @@ The statistics include:
 > [!NOTE]
 > General statistics are based on all recorded transactions, while budget usage is based on the current month's expenses.
 ---
+### Managing Custom Categories: `category`
+Allows you to create and manage your own expense categories beyond the 7 built-in ones.
+Custom categories are saved automatically and available across sessions.
+
+**Format**:
+- `category add/NAME`
+- `category remove/NAME`
+- `category list`
+
+**Rules for category names**:
+- Must contain only letters, digits, hyphens (`-`), or underscores (`_`)
+- No spaces or special characters allowed
+- Names are case-insensitive (`Groceries` and `groceries` are treated as the same)
+
+**Examples**:
+- `category add/groceries` — creates a new custom category called "groceries"
+- `category remove/groceries` — deletes the custom category "groceries"
+- `category list` — lists all available expense categories, built-in and custom
+
+> [!NOTE]
+> Built-in categories (`food`, `transport`, `utilities`, `education`, `rent`, `medical`, `misc`) cannot be removed.
+> A category cannot be removed if it is currently used by an existing transaction — delete those transactions first.
+> Once a custom category is added, it can be used with `add` and `edit` just like a built-in category.
+---
 
 ### Adding a Recurring Transaction: `add ... rec/FREQUENCY`
 Creates a recurring transaction template. MoneyBagProMax will automatically generate the corresponding expense or income entries on startup and when you run `gen-rec`, covering all due dates since the last generation.
@@ -259,7 +284,6 @@ Creates a recurring transaction template. MoneyBagProMax will automatically gene
 **Examples**:
 - `add food/10 desc/lunch rec/daily` — Creates a daily $10 lunch expense template starting today.
 - `add salary/3000 desc/monthly-pay d/2026-04-01 rec/monthly` — Creates a monthly $3000 income template starting 2026-04-01.
-
 ---
 
 ### Listing Recurring Transactions: `list-rec`
@@ -365,6 +389,7 @@ Then, overwrite the generated data/transactions.txt file with the one from your 
 
 MoneyBagProMax automatically saves your transaction data in two text files, both located in the `./data/` directory relative to where you run the program:
 - `transactions.txt` — stores all recorded income and expense entries.
+- `categories.txt` — stores your custom expense categories (created with `category add/NAME`).
 - `recurring.txt` — stores your recurring transaction templates (created with `add ... rec/FREQUENCY`).
 
 > ⚠️**Caution:** Be cautious when editing either file directly, as there are guards against file corruption and improper formatting. Failure to pass these checks may cause errors or data loss when the application is next launched.
@@ -373,26 +398,29 @@ MoneyBagProMax automatically saves your transaction data in two text files, both
 
 ## Command Summary
 
-| Action          | Format                                                              | Example                                        |
-|-----------------|---------------------------------------------------------------------|------------------------------------------------|
-| **Add Expense** | `add [expense-category]/PRICE [desc/DESCRIPTION] [d/YYYY-MM-DD]`   | `add food/10 desc/lunch d/2025-03-01`          |
-| **Add Income**  | `add [income-category]/PRICE [desc/DESCRIPTION] [d/YYYY-MM-DD]`    | `add salary/500 desc/allowance d/2026-03-01`   |
-| **List**        | `list`                                                              | —                                              |
-| **Find**        | `find KEYWORD`                                                      | `find lunch`                                   |
-| **Summary**     | `summary [TYPE]`                                                    | `summary all`                                  |
-| **Sort**        | `sort by/CRITERIA`                                                  | `sort by/date`                                 |
-| **Delete**      | `delete ENTRY_INDEX`                                                | `delete 3`                                     |
-| **Edit**        | `edit INDEX [category]/PRICE [desc/DESCRIPTION] [d/YYYY-MM-DD]`    | `edit 3 food/20 desc/dinner d/2026-03-20`      |
-| **Undo**        | `undo`                                                              | —                                              |
-| **Redo**        | `redo`                                                              | —                                              |
-| **Budget Set**  | `budget set AMOUNT`                                                 | `budget set 1000`                              |
-| **Budget Status** | `budget status`                                                   | —                                              |
-| **Stats**       | `stats`                                                             | —                                              |
-| **Add Recurring**      | `add [category]/PRICE [desc/DESCRIPTION] [d/YYYY-MM-DD] rec/FREQUENCY` | `add food/10 desc/lunch rec/daily`  |
-| **List Recurring**     | `list-rec`                                                              | —                                   |
-| **Delete Recurring**   | `delete-rec INDEX`                                                      | `delete-rec 2`                      |
-| **Generate Recurring** | `gen-rec`                                                               | —                                   |
-| **Filter**      | `filter [from/YYYY-MM-DD] [to/YYYY-MM-DD]`                         | `filter from/2026-01-01 to/2026-03-31`         |
-| **Export CSV**  | `export-csv FILEPATH`                                               | `export-csv ~/transactions.csv`                |
-| **Export Data** | `export-data FILEPATH`                                              | `export-data ~/backup/transactions.txt`         |
-| **Exit**        | `exit`                                                              | —                                              |
+| Action                 | Format                                                                 | Example                                      |
+|------------------------|------------------------------------------------------------------------|----------------------------------------------|
+| **Add Expense**        | `add [expense-category]/PRICE [desc/DESCRIPTION] [d/YYYY-MM-DD]`       | `add food/10 desc/lunch d/2025-03-01`        |
+| **Add Income**         | `add [income-category]/PRICE [desc/DESCRIPTION] [d/YYYY-MM-DD]`        | `add salary/500 desc/allowance d/2026-03-01` |
+| **List**               | `list`                                                                 | —                                            |
+| **Find**               | `find KEYWORD`                                                         | `find lunch`                                 |
+| **Summary**            | `summary [TYPE]`                                                       | `summary all`                                |
+| **Sort**               | `sort by/CRITERIA`                                                     | `sort by/date`                               |
+| **Delete**             | `delete ENTRY_INDEX`                                                   | `delete 3`                                   |
+| **Edit**               | `edit INDEX [category]/PRICE [desc/DESCRIPTION] [d/YYYY-MM-DD]`        | `edit 3 food/20 desc/dinner d/2026-03-20`    |
+| **Undo**               | `undo`                                                                 | —                                            |
+| **Redo**               | `redo`                                                                 | —                                            |
+| **Budget Set**         | `budget set AMOUNT`                                                    | `budget set 1000`                            |
+| **Budget Status**      | `budget status`                                                        | —                                            |
+| **Category Add**       | `category add/NAME`                                                    | `category add/groceries`                     |
+| **Category Remove**    | `category remove/NAME`                                                 | `category remove/groceries`                  |
+| **Category List**      | `category list`                                                        | —                                            |
+| **Stats**              | `stats`                                                                | —                                            |
+| **Add Recurring**      | `add [category]/PRICE [desc/DESCRIPTION] [d/YYYY-MM-DD] rec/FREQUENCY` | `add food/10 desc/lunch rec/daily`           |
+| **List Recurring**     | `list-rec`                                                             | —                                            |
+| **Delete Recurring**   | `delete-rec INDEX`                                                     | `delete-rec 2`                               |
+| **Generate Recurring** | `gen-rec`                                                              | —                                            |
+| **Filter**             | `filter [from/YYYY-MM-DD] [to/YYYY-MM-DD]`                             | `filter from/2026-01-01 to/2026-03-31`       |
+| **Export CSV**         | `export-csv FILEPATH`                                                  | `export-csv ~/transactions.csv`              |
+| **Export Data**        | `export-data FILEPATH`                                                 | `export-data ~/backup/transactions.txt`      |
+| **Exit**               | `exit`                                                                 | —                                            |
