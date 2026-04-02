@@ -10,13 +10,17 @@ participant ":AddRecurringCommand" as AddRec
 participant ":RecurringTransactionList" as RecList
 
 User -> Ui : enter "add food/10 desc/lunch rec/daily"
+activate Ui
+
 Ui -> Parser : parse("add food/10 desc/lunch rec/daily")
 activate Parser
+
 Parser -> Parser : parseAddCommand("food/10 desc/lunch rec/daily")
 activate Parser #LightGray
 note right of Parser : Detects rec/ suffix;\nextracts Frequency.DAILY
 Parser --> Parser : AddRecurringCommand
 deactivate Parser
+
 Parser --> Ui : AddRecurringCommand
 deactivate Parser
 
@@ -31,6 +35,9 @@ deactivate AddRec
 
 alt invalid category
     AddRec -> Ui : showMessage("Invalid category ...")
+    activate Ui #LightGray
+    Ui --> AddRec
+    deactivate Ui
 else valid category
     create ":RecurringTransaction" as RT
     AddRec -> RT : <<create>>(category, amount, description, frequency, startDate)
@@ -44,7 +51,11 @@ else valid category
     deactivate RecList
 
     AddRec -> Ui : showMessage("Added recurring: ...")
+    activate Ui #LightGray
+    Ui --> AddRec
+    deactivate Ui
 end
 
 deactivate AddRec
+deactivate Ui
 @enduml

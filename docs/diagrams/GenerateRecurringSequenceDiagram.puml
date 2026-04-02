@@ -12,6 +12,8 @@ participant ":RecurringTransaction" as RT
 participant ":TransactionList" as TList
 
 User -> Ui : enter "gen-rec"
+activate Ui
+
 Ui -> Parser : parse("gen-rec")
 activate Parser
 Parser --> Ui : GenerateRecurringCommand
@@ -57,12 +59,19 @@ loop for each template in recurringList
 
     opt templateCount > 0
         GenRec -> Ui : showMessage("Generated N transaction(s) from: ...")
+        activate Ui #LightGray
+        Ui --> GenRec
+        deactivate Ui
     end
 end
 
 opt no transactions generated and recurringList not empty
     GenRec -> Ui : showMessage("No recurring transactions are due.")
+    activate Ui #LightGray
+    Ui --> GenRec
+    deactivate Ui
 end
 
 deactivate GenRec
+deactivate Ui
 @enduml
