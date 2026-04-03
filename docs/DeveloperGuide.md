@@ -164,7 +164,7 @@ The `Parser` extracts the index provided by the user and passes it to the `Delet
 The `DeleteCommand` then removes the corresponding transaction from `TransactionList` using the `remove(int i)` method and displays a confirmation message.
 
 ### Class Diagram
-![Class Diagram](diagrams/ListDeleteClassDiagrams.png)
+![Class Diagram](diagrams/ListDeleteClassDiagram.png)
 
 ### Design Considerations
 This feature uses a command-based architecture to ensure separation of concerns.

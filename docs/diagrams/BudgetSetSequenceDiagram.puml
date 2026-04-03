@@ -8,10 +8,22 @@ participant ":BudgetCommand" as BudgetCommand
 participant ":Budget" as Budget
 
 User -> Ui : enter "budget set 1000"
+activate Ui
+
 Ui -> Parser : parse("budget set 1000")
+activate Parser
 Parser --> Ui : BudgetCommand
+deactivate Parser
+
 Ui -> BudgetCommand : execute(list, budget, ui)
+activate BudgetCommand
+
 BudgetCommand -> Budget : setMonthlyBudget(1000)
+activate Budget
 Budget --> BudgetCommand
+deactivate Budget
+
 BudgetCommand -> Ui : showMessage("Monthly budget set to $1000.00")
+deactivate BudgetCommand
+deactivate Ui
 @enduml

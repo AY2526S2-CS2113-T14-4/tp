@@ -9,25 +9,50 @@ participant ":TransactionList" as TransactionList
 participant ":Budget" as Budget
 
 User -> Ui : enter "budget status"
+activate Ui
+
 Ui -> Parser : parse("budget status")
+activate Parser
 Parser --> Ui : BudgetCommand
+deactivate Parser
+
 Ui -> BudgetCommand : execute(list, budget, ui)
+activate BudgetCommand
 
 BudgetCommand -> Budget : hasBudget()
+activate Budget
 
 alt no budget set
     Budget --> BudgetCommand : false
+    deactivate Budget
     BudgetCommand -> Ui : showMessage("No monthly budget set.")
 else budget exists
     Budget --> BudgetCommand : true
+    deactivate Budget
+
     BudgetCommand -> TransactionList : getTotalExpensesForMonth(...)
+    activate TransactionList
     TransactionList --> BudgetCommand : spentThisMonth
+    deactivate TransactionList
+
     BudgetCommand -> Budget : getMonthlyBudget()
+    activate Budget
     Budget --> BudgetCommand : monthlyBudget
+    deactivate Budget
+
     BudgetCommand -> Budget : calculateRemaining(spentThisMonth)
+    activate Budget
     Budget --> BudgetCommand : remaining
+    deactivate Budget
+
     BudgetCommand -> Budget : calculatePercentageUsed(spentThisMonth)
+    activate Budget
     Budget --> BudgetCommand : percentUsed
+    deactivate Budget
+
     BudgetCommand -> Ui : showMessage(...)
 end
+
+deactivate BudgetCommand
+deactivate Ui
 @enduml

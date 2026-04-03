@@ -5,16 +5,24 @@ participant ":Parser" as Parser
 participant ":DeleteCommand" as DeleteCommand
 participant ":TransactionList" as TransactionList
 
-User -> Ui : enter "delete 2"
-Ui -> Parser : parse("delete 2")
-Parser --> Ui : DeleteCommand
-Ui -> DeleteCommand : execute(list, ui)
+User -> Ui : delete 2
+activate Ui
 
-alt valid index
-    DeleteCommand -> TransactionList : remove(index)
-    TransactionList --> DeleteCommand : removed transaction
-    DeleteCommand -> Ui : showMessage("Deleted: ...")
-else invalid index
-    DeleteCommand -> Ui : showMessage("Invalid index")
-end
+Ui -> Parser : parse("delete 2")
+activate Parser
+Parser --> Ui : DeleteCommand
+deactivate Parser
+
+Ui -> DeleteCommand : execute(list, budget, ui)
+activate DeleteCommand
+
+DeleteCommand -> TransactionList : delete(index)
+activate TransactionList
+TransactionList --> DeleteCommand : success
+deactivate TransactionList
+
+DeleteCommand -> Ui : showMessage()
+deactivate DeleteCommand
+
+deactivate Ui
 @enduml

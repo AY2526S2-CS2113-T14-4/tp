@@ -9,38 +9,78 @@ participant ":TransactionList" as TransactionList
 participant ":Budget" as Budget
 
 User -> Ui : enter "stats"
+activate Ui
+
 Ui -> Parser : parse("stats")
+activate Parser
 Parser --> Ui : StatsCommand
+deactivate Parser
+
 Ui -> StatsCommand : execute(list, budget, ui)
+activate StatsCommand
 
 StatsCommand -> TransactionList : getTotalIncome()
+activate TransactionList
 TransactionList --> StatsCommand : totalIncome
+deactivate TransactionList
+
 StatsCommand -> TransactionList : getTotalExpenses()
+activate TransactionList
 TransactionList --> StatsCommand : totalExpense
+deactivate TransactionList
+
 StatsCommand -> TransactionList : getHighestExpense()
+activate TransactionList
 TransactionList --> StatsCommand : highestExpense
+deactivate TransactionList
+
 StatsCommand -> TransactionList : getLowestExpense()
+activate TransactionList
 TransactionList --> StatsCommand : lowestExpense
+deactivate TransactionList
+
 StatsCommand -> TransactionList : getHighestIncome()
+activate TransactionList
 TransactionList --> StatsCommand : highestIncome
+deactivate TransactionList
+
 StatsCommand -> TransactionList : getMostFrequentCategory()
+activate TransactionList
 TransactionList --> StatsCommand : mostFrequentCategory
+deactivate TransactionList
+
 StatsCommand -> TransactionList : getAverageSpendingPerCategory()
+activate TransactionList
 TransactionList --> StatsCommand : averageMap
+deactivate TransactionList
+
 StatsCommand -> TransactionList : getSpendingTrend()
+activate TransactionList
 TransactionList --> StatsCommand : trend
+deactivate TransactionList
+
+StatsCommand -> Budget : hasBudget()
+activate Budget
 
 alt budget set
-    StatsCommand -> Budget : hasBudget()
     Budget --> StatsCommand : true
+    deactivate Budget
+
     StatsCommand -> TransactionList : getTotalExpensesForMonth(...)
+    activate TransactionList
     TransactionList --> StatsCommand : spentThisMonth
+    deactivate TransactionList
+
     StatsCommand -> Budget : calculatePercentageUsed(spentThisMonth)
+    activate Budget
     Budget --> StatsCommand : budgetUsed
+    deactivate Budget
 else no budget
-    StatsCommand -> Budget : hasBudget()
     Budget --> StatsCommand : false
+    deactivate Budget
 end
 
 StatsCommand -> Ui : showMessage(...)
+deactivate StatsCommand
+deactivate Ui
 @enduml

@@ -5,19 +5,24 @@ participant ":Parser" as Parser
 participant ":ListCommand" as ListCommand
 participant ":TransactionList" as TransactionList
 
-User -> Ui : enter "list"
-Ui -> Parser : parse("list")
-Parser --> Ui : ListCommand
-Ui -> ListCommand : execute(list, ui)
-ListCommand -> TransactionList : isEmpty()
+User -> Ui : list
+activate Ui
 
-alt list is empty
-    ListCommand -> Ui : showMessage("No transactions found.")
-else list not empty
-    loop for each transaction
-        ListCommand -> TransactionList : get(i)
-        TransactionList --> ListCommand : transaction
-        ListCommand -> Ui : showMessage(...)
-    end
-end
+Ui -> Parser : parse("list")
+activate Parser
+Parser --> Ui : ListCommand
+deactivate Parser
+
+Ui -> ListCommand : execute(list, budget, ui)
+activate ListCommand
+
+ListCommand -> TransactionList : getAllTransactions()
+activate TransactionList
+TransactionList --> ListCommand : transactions
+deactivate TransactionList
+
+ListCommand -> Ui : show(transactions)
+deactivate ListCommand
+
+deactivate Ui
 @enduml

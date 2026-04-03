@@ -1,46 +1,56 @@
 @startuml
+skinparam classAttributeIconSize 0
 skinparam style strictuml
 
-actor User
-participant ":Ui" as Ui
-participant ":Parser" as Parser
-participant ":StatsCommand" as StatsCommand
-participant ":TransactionList" as TransactionList
-participant ":Budget" as Budget
+class Parser {
+  +parse(input) : Command
+}
 
-User -> Ui : enter "stats"
-Ui -> Parser : parse("stats")
-Parser --> Ui : StatsCommand
-Ui -> StatsCommand : execute(list, budget, ui)
+class "{abstract}\nCommand" as Command {
+  +execute(list : TransactionList, budget : Budget, ui : Ui)
+}
 
-StatsCommand -> TransactionList : getTotalIncome()
-TransactionList --> StatsCommand : totalIncome
-StatsCommand -> TransactionList : getTotalExpenses()
-TransactionList --> StatsCommand : totalExpense
-StatsCommand -> TransactionList : getHighestExpense()
-TransactionList --> StatsCommand : highestExpense
-StatsCommand -> TransactionList : getLowestExpense()
-TransactionList --> StatsCommand : lowestExpense
-StatsCommand -> TransactionList : getHighestIncome()
-TransactionList --> StatsCommand : highestIncome
-StatsCommand -> TransactionList : getMostFrequentCategory()
-TransactionList --> StatsCommand : mostFrequentCategory
-StatsCommand -> TransactionList : getAverageSpendingPerCategory()
-TransactionList --> StatsCommand : averageMap
-StatsCommand -> TransactionList : getSpendingTrend()
-TransactionList --> StatsCommand : trend
+class BudgetCommand {
+  -action : String
+  -amount : double
+  +execute(list : TransactionList, budget : Budget, ui : Ui)
+}
 
-alt budget set
-    StatsCommand -> Budget : hasBudget()
-    Budget --> StatsCommand : true
-    StatsCommand -> TransactionList : getTotalExpensesForMonth(...)
-    TransactionList --> StatsCommand : spentThisMonth
-    StatsCommand -> Budget : calculatePercentageUsed(spentThisMonth)
-    Budget --> StatsCommand : budgetUsed
-else no budget
-    StatsCommand -> Budget : hasBudget()
-    Budget --> StatsCommand : false
-end
+class StatsCommand {
+  +execute(list : TransactionList, budget : Budget, ui : Ui)
+}
 
-StatsCommand -> Ui : showMessage(...)
+class TransactionList {
+  +getTotalIncome()
+  +getTotalExpenses()
+  +getTotalExpensesForMonth(month)
+  +getHighestExpense()
+  +getLowestExpense()
+  +getHighestIncome()
+  +getMostFrequentCategory()
+  +getAverageSpendingPerCategory()
+  +getSpendingTrend()
+}
+
+class Budget {
+  -monthlyBudget : double
+  +setMonthlyBudget(amount : double)
+  +getMonthlyBudget()
+  +hasBudget()
+  +calculateRemaining(spent : double)
+  +calculatePercentageUsed(spent : double)
+}
+
+class Ui {
+  +showMessage(message : String)
+}
+
+Parser --> Command
+Command <|-- BudgetCommand
+Command <|-- StatsCommand
+BudgetCommand --> Budget
+BudgetCommand --> TransactionList
+StatsCommand --> TransactionList
+StatsCommand --> Budget
+Command --> Ui
 @enduml
