@@ -24,5 +24,6 @@ deactivate TransactionList
 ListCommand -> Ui : show(transactions)
 deactivate ListCommand
 
+Ui --> User : display transactions
 deactivate Ui
 @enduml
