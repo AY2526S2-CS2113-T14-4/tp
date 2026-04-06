@@ -76,14 +76,14 @@ Command <|-- ListRecurringCommand
 Command <|-- DeleteRecurringCommand
 Command <|-- GenerateRecurringCommand
 
-Parser --> Command
+Parser "1" --> "1" Command : creates >
 
-AddRecurringCommand --> RecurringTransactionList
-ListRecurringCommand --> RecurringTransactionList
-DeleteRecurringCommand --> RecurringTransactionList
-GenerateRecurringCommand --> RecurringTransactionList
-GenerateRecurringCommand --> TransactionList
+AddRecurringCommand "1" --> "1" RecurringTransactionList
+ListRecurringCommand "1" --> "1" RecurringTransactionList
+DeleteRecurringCommand "1" --> "1" RecurringTransactionList
+GenerateRecurringCommand "1" --> "1" RecurringTransactionList
+GenerateRecurringCommand "1" --> "1" TransactionList
 
-RecurringTransactionList --> RecurringTransaction
-RecurringTransaction --> Frequency
+RecurringTransactionList "1" --> "0..*" RecurringTransaction : contains >
+RecurringTransaction "1" --> "1" Frequency : has >
 @enduml
