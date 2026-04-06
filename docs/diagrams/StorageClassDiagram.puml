@@ -35,7 +35,7 @@ class Expense {
 
 Transaction <|-- Income
 Transaction <|-- Expense
-Storage ..> TransactionList
-TransactionList ..> Transaction
+Storage "1" ..> "1" TransactionList
+TransactionList "1" --> "0..*" Transaction
 
 @enduml

@@ -43,8 +43,8 @@ class Expense {
 }
 
 Command <|-- CategoryCommand
-CategoryCommand --> CategoryManager
-CategoryCommand ..> TransactionList
-CategoryCommand ..> Ui
-CategoryManager --> Expense
+CategoryCommand "1" --> "1" CategoryManager : uses >
+CategoryCommand "1" ..> "0..1" TransactionList
+CategoryCommand "1" ..> "1" Ui
+CategoryManager "1" --> "1" Expense
 @enduml

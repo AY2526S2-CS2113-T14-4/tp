@@ -29,7 +29,7 @@ class Ui {
 }
 
 Command <|-- SortCommand
-SortCommand ..> TransactionList
-SortCommand ..> Ui
-TransactionList --> Transaction
+SortCommand "1" ..> "1" TransactionList
+SortCommand "1" ..> "1" Ui
+TransactionList "1" --> "0..*" Transaction
 @enduml

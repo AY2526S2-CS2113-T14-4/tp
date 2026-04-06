@@ -12,6 +12,8 @@ class FindCommand {
 }
 
 class SummaryCommand {
+  -summaryType: String
+  -targetMonth: String
   +execute(transactions: TransactionList, ui: Ui): void
 }
 
@@ -27,9 +29,9 @@ class Ui {
 
 Command <|-- FindCommand
 Command <|-- SummaryCommand
-FindCommand ..> TransactionList
-FindCommand ..> Ui
-SummaryCommand ..> TransactionList
-SummaryCommand ..> Ui
+FindCommand "1" ..> "1" TransactionList
+FindCommand "1" ..> "1 "Ui
+SummaryCommand "1" ..> "1" TransactionList
+SummaryCommand "1" ..> "1" Ui
 
 @enduml
