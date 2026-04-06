@@ -55,10 +55,10 @@ class TransactionList {
 
 Command <|-- UndoCommand
 Command <|-- RedoCommand
-UndoCommand --> UndoRedoManager
-RedoCommand --> UndoRedoManager
-UndoRedoManager *-- ActionPair
-ActionPair --> ActionType
-UndoCommand ..> TransactionList
-RedoCommand ..> TransactionList
+UndoCommand "1" --> "1" UndoRedoManager
+RedoCommand "1" --> "1" UndoRedoManager
+UndoRedoManager "1" *-- "0..*" ActionPair
+ActionPair "1" --> "1" ActionType
+UndoCommand "1" ..> "1" TransactionList
+RedoCommand "1" ..> "1" TransactionList
 @enduml
