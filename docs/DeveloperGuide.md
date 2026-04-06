@@ -917,21 +917,42 @@ Possible future enhancements include:
 - comparing statistics across months
 - presenting more detailed trend analysis
 
+---
+
 ## Product scope
 ### Target user profile
 
-{Describe the target user profile}
+> University Students
+
+---
 
 ### Value proposition
 
-{Describe the value proposition: what problem does it solve?}
+As most university students have a lot on their plate such as studying and keeping up with assignments, we find that university students do not have the time to properly keep track of their spending efficiently.
+
+Hence, this product streamlines the process of monitoring spendings and allows them to focus their efforts on the more important things.
+
+---
 
 ## User Stories
 
-|Version| As a ... | I want to ... | So that I can ...|
-|--------|----------|---------------|------------------|
-|v1.0|new user|see usage instructions|refer to them when I forget how to use the application|
-|v2.0|user|find a to-do item by name|locate a to-do without having to go through the entire list|
+| Version | As ... | I want to ... | So that I can ... |
+|---------|--------|---------------|-------------------|
+| v1.0    | a clumsy typist | receive clear, human-readable error messages when I type a command wrong | know exactly how to fix it |
+| v1.0    | a new user | view a help message listing all available commands | learn how to use the application while using the application |
+| v1.0    | a user | delete a specific transaction quickly using an ID | remove entries that were made by mistake |
+| v1.0    | a user | list all transactions entered so far | review my complete spending history |
+| v1.0    | a user | view a summary of all transactions | review my spending habits |
+| v1.0    | a student | add an expense with amount and category | track my spending quickly |
+| v1.0    | a student | add an income entry | track money coming in (allowance, part-time pay) |
+| v1.0    | a student | store a short description | remember what the transaction was for |
+| v1.0    | a student | automatically record a date (default today) | logging is fast |
+| v2.0    | a student | edit an entry | correct mistakes |
+| v2.0    | a student | see how much budget I have left | know if I can afford extra spending |
+| v2.0    | a forgetful user | search for transactions containing a specific keyword | find a specific entry even if I forgot the date |
+| v2.0    | a student | export my data to a simple text/CSV file | back it up or analyze it elsewhere |
+| v2.0    | a user | see a visual progress bar for my budget | visually see how little money I have left for that month / year |
+| v2.0    | a visual learner | see my expenses grouped by category | understand the distribution of my spending |
 
 ## Non-Functional Requirements
 
