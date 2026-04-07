@@ -27,12 +27,12 @@ declares the abstract `getType()` method that each subclass must implement to id
 
 **Fields defined in `Transaction`:**
 
-| Field | Type | Description |
-|---|---|---|
-| `category` | `String` | The category label for the transaction |
-| `amount` | `double` | The monetary value (must be positive) |
-| `description` | `String` | An optional description string |
-| `date` | `LocalDate` | The date of the transaction |
+| Field         | Type        | Description                            |
+|---------------|-------------|----------------------------------------|
+| `category`    | `String`    | The category label for the transaction |
+| `amount`      | `double`    | The monetary value (must be positive)  |
+| `description` | `String`    | An optional description string         |
+| `date`        | `LocalDate` | The date of the transaction            |
 
 All fields are declared `protected final`, making them accessible to subclasses but immutable after construction.
 This immutability is intentional — rather than modifying a transaction in place, the `EditCommand` removes
@@ -52,15 +52,15 @@ transaction types that can be stored in the `TransactionList`.
 ### Design
 `Expense` enforces a fixed set of valid categories defined as a static list:
 
-| Category   | Description |
-|------------|---|
-| `food`     | Meals and groceries |
-| `transport` | Commuting and travel costs |
+| Category    | Description                         |
+|-------------|-------------------------------------|
+| `food`      | Meals and groceries                 |
+| `transport` | Commuting and travel costs          |
 | `utilities` | Bills such as electricity and water |
-| `education` | Tuition, books, and course fees |
-| `rent`     | Accommodation payments |
-| `medical`  | Healthcare and pharmacy costs |
-| `misc`     | Any other expenditure |
+| `education` | Tuition, books, and course fees     |
+| `rent`      | Accommodation payments              |
+| `medical`   | Healthcare and pharmacy costs       |
+| `misc`      | Any other expenditure               |
 
 Logging is configured at `WARNING` level to reduce noise during normal operation, matching the
 convention used by `Income` and `TransactionList`.
@@ -188,7 +188,7 @@ Possible future improvements include allowing deletion of multiple transactions 
 ### Overview
 The `find` and `summary` features allow users to draw meaningful insights from their recorded transactions.
 The `find` command locates specific transactions based on keyword matching, allowing users to search for distinct transactions or categories. 
-The `summary` command calculates and displays the overall statistics (eg. total expense) for the user to see at a glance.
+The `summary` command calculates and displays the overall statistics (e.g. total expense) for the user to see at a glance.
 
 ### Architecture and Flow
 Similar to the broader application architecture, these features rely on the interaction between the `Parser`, `Command`, `TransactionList`, and `Ui` components.
@@ -275,7 +275,7 @@ The following sequence diagram illustrates the interaction when a user sorts tra
   stored by `UndoRedoManager`. If sort modified the list order, previously recorded undo/redo
   indices would point to the wrong transactions, breaking the undo/redo feature.
 - **Leveraging Java standard library:** Using `Comparator` method references and
-  `Comparator.comparing()` avoids hand-written comparison logic, which is verbose and prone to
+  `Comparator.comparing()` avoids handwritten comparison logic, which is verbose and prone to
   sign errors. The standard library comparators are well-tested and handle edge cases (e.g., null
   dates) more robustly.
 - **`isMutating()` returns false:** Because the original list is unchanged, no storage save is
@@ -435,7 +435,7 @@ The following diagram shows the full interaction when a user redoes a previously
   action. For a personal finance app where sessions may involve many operations, the delta approach
   is more memory-efficient.
 - **Clearing the redo stack on new action:** When a new mutating action occurs after one or more
-  undos, the redo stack is cleared. This follows the standard undo/redo contract used by text
+  undoes, the redo stack is cleared. This follows the standard undo/redo contract used by text
   editors: branching redo history (where redo could replay an action conflicting with newer
   changes) is avoided by discarding the redo stack. The result is a linear, predictable history.
 - **Index-based reinsertion:** Storing the exact list index allows transactions to be restored to
@@ -478,14 +478,14 @@ It extends the abstract `Transaction` class, alongside `Expense`, sharing common
 ### Design
 `Income` enforces a fixed set of valid categories defined as a static list:
 
-| Category | Description |
-|---|---|
-| `salary` | Regular employment income |
-| `freelance` | Contract or freelance work |
-| `investment` | Returns from investments |
-| `business` | Business revenue |
-| `gift` | Monetary gifts received |
-| `misc` | Any other income |
+| Category     | Description                |
+|--------------|----------------------------|
+| `salary`     | Regular employment income  |
+| `freelance`  | Contract or freelance work |
+| `investment` | Returns from investments   |
+| `business`   | Business revenue           |
+| `gift`       | Monetary gifts received    |
+| `misc`       | Any other income           |
 
 Category validity is enforced via an assertion in the constructor, consistent with the defensive programming approach used elsewhere in the codebase.
 Logging is configured at `WARNING` level to reduce noise during normal operation.
@@ -519,7 +519,7 @@ It is invoked on startup to reload saved transactions, and after every mutating 
 ### Architecture and Flow
 The `Storage` class operates independently of the command pipeline and is called directly by the main application loop.
 On startup, `Storage.load()` reads the data file line by line, parses each transaction record, and populates the `TransactionList`.
-After any command that modifies the list (add, delete, etc.), `Storage.save()` serializes the entire `TransactionList` back to disk atomically using a temporary file, replacing the previous file only once the write succeeds.
+After any command that modifies the list (add, delete, etc.), `Storage.save()` serializes the entire `TransactionList` back to disk atomically using a temporary file, replacing the previous file only once the write command succeeds.
 
 ### Sequence Diagram for Load
 ![Storage Load Sequence Diagram](diagrams/StorageLoadSequenceDiagram.png)
@@ -593,7 +593,9 @@ A single unified exporter with a format parameter was considered, but rejected b
 JSON was considered as an additional export format but was excluded for the same reason as in the storage design: it would require a third-party library dependency.
 
 ### Future Improvements
-Possible future improvements include adding an export command accessible from the REPL so users can trigger exports without restarting the application, supporting custom output field selection for CSV exports, and adding a JSON export format if a suitable zero-dependency serializer is introduced elsewhere in the codebase.
+Possible future improvements include adding an export command accessible from the REPL so users can trigger exports without restarting the application, 
+supporting custom output field selection for CSV exports, 
+and adding a JSON export format if a suitable zero-dependency serializer is introduced elsewhere in the codebase.
 
 ---
 
@@ -620,7 +622,7 @@ The feature adds two new packages alongside the existing ones:
   `GenerateRecurringCommand` in `command/`
 
 The main application loop (`MoneyBagProMax`) owns a single `RecurringTransactionList` instance.
-On startup it calls `storage.loadRecurring()` to hydrate the list from disk, then immediately
+On startup, it calls `storage.loadRecurring()` to hydrate the list from disk, then immediately
 runs `GenerateRecurringCommand` to materialise any pending transactions before the REPL begins.
 After every command, the loop checks `command.isMutating()` (save `transactions.txt`) and
 `command.isMutatingRecurring()` (save `recurring.txt`) independently.
@@ -631,15 +633,15 @@ After every command, the loop checks `command.isMutating()` (save `transactions.
 `RecurringTransaction` is **not** a subclass of `Transaction`. It is a template object that holds
 the parameters needed to generate concrete `Income` or `Expense` entries:
 
-| Field | Type | Description |
-|---|---|---|
-| `category` | `String` | Category label (determines income vs. expense) |
-| `amount` | `double` | Fixed monetary value for every generated entry |
-| `description` | `String` | Optional label copied to every generated entry |
-| `frequency` | `Frequency` | How often to generate (DAILY / WEEKLY / MONTHLY) |
-| `startDate` | `LocalDate` | First date a transaction should be generated |
-| `transactionType` | `String` | `"income"` if category is in `Income.VALID_CATEGORIES`, else `"expense"` |
-| `lastGeneratedDate` | `LocalDate` | Most recent date a transaction was generated; `null` if never run |
+| Field               | Type        | Description                                                              |
+|---------------------|-------------|--------------------------------------------------------------------------|
+| `category`          | `String`    | Category label (determines income vs. expense)                           |
+| `amount`            | `double`    | Fixed monetary value for every generated entry                           |
+| `description`       | `String`    | Optional label copied to every generated entry                           |
+| `frequency`         | `Frequency` | How often to generate (DAILY / WEEKLY / MONTHLY)                         |
+| `startDate`         | `LocalDate` | First date a transaction should be generated                             |
+| `transactionType`   | `String`    | `"income"` if category is in `Income.VALID_CATEGORIES`, else `"expense"` |
+| `lastGeneratedDate` | `LocalDate` | Most recent date a transaction was generated; `null` if never run        |
 
 All fields except `lastGeneratedDate` are `final`. `setLastGeneratedDate()` is the only mutator
 and is called by `GenerateRecurringCommand` after each generated entry to advance the watermark.
@@ -741,7 +743,7 @@ materialised when the user opens the app, without requiring a manual `gen-rec` c
   out. The separate list approach preserves backward compatibility with all existing commands.
 - **Storing all generated dates:** Persisting a set of every generated date per template would
   allow safe regeneration after a user manually deletes a generated transaction. This was rejected
-  because it is unbounded in size (a daily template running for a year produces 365 stored dates),
+  because it is unbounded (a daily template running for a year produces 365 stored dates),
   and the expected use case does not require regeneration after manual deletion.
 
 ### Future Improvements
