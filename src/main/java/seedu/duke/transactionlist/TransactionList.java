@@ -4,6 +4,7 @@ import seedu.duke.transaction.Transaction;
 
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.Collections;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -181,26 +182,24 @@ public class TransactionList {
     }
 
     public String getSpendingTrend() {
-        if (transactions.size() < 2) {
-            return "Not enough data";
-        }
-
-        double earlier = 0;
-        double later = 0;
-
-        YearMonth firstMonth = YearMonth.from(transactions.get(0).getDate());
-        YearMonth lastMonth = YearMonth.from(transactions.get(transactions.size() - 1).getDate());
+        Map<YearMonth, Double> monthTotals = new HashMap<>();
 
         for (Transaction t : transactions) {
             if (t.getType().equals("expense")) {
-                YearMonth tMonth = YearMonth.from(t.getDate());
-                if (tMonth.equals(firstMonth)) {
-                    earlier += t.getAmount();
-                } else if (tMonth.equals(lastMonth)) {
-                    later += t.getAmount();
-                }
+                YearMonth month = YearMonth.from(t.getDate());
+                monthTotals.put(month, monthTotals.getOrDefault(month, 0.0) + t.getAmount());
             }
         }
+
+        if (monthTotals.size() < 2) {
+            return "Not enough data";
+        }
+
+        YearMonth earliest = Collections.min(monthTotals.keySet());
+        YearMonth latest = Collections.max(monthTotals.keySet());
+
+        double earlier = monthTotals.get(earliest);
+        double later = monthTotals.get(latest);
 
         if (later > earlier) {
             return "Increasing";

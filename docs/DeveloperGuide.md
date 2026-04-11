@@ -945,6 +945,14 @@ For example, TransactionList provides methods such as:
 - getAverageSpendingPerCategory()
 - getSpendingTrend()
 
+The spending trend is computed by grouping expense transactions by month using YearMonth.
+TransactionList aggregates the total expense for each month and compares the earliest and latest months.
+
+If the total expense in the later month is higher than the earlier month, the trend is reported as Increasing.
+If it is lower, the trend is reported as Decreasing.
+If both are equal, the trend is reported as Stable.
+
+If expense data exists for fewer than two distinct months, the application reports "Not enough data" to avoid misleading results.
 The implementation also uses HashMap to compute category frequency and average spending per category efficiently.
 
 To reduce duplication, a helper method was introduced to generalise the logic for finding extreme transactions (e.g. highest or lowest transactions of a certain type).  
@@ -966,6 +974,7 @@ StatsCommand requests a series of values from TransactionList, including total i
 If a budget has been set, StatsCommand also retrieves the current month’s total expense from TransactionList and passes it to Budget to calculate the percentage of budget used.
 
 Finally, StatsCommand formats the information into a statistics summary and passes it to Ui for display.
+The spending trend is derived from monthly aggregated expense data and is only computed when at least two distinct months of expense data are available.
 
 ### Design Considerations
 
@@ -991,12 +1000,21 @@ It also makes the code clearer for tasks such as finding the most frequent categ
 Option 1 was chosen because it reduces code duplication and improves maintainability.  
 The helper method hides the repeated filtering and comparison logic while still exposing a clear public API through methods such as getHighestExpense() and getLowestExpense().
 
+#### Aspect: How to compute spending trend
+
+- Option 1 (Chosen): Compare expense totals across distinct months.
+- Option 2: Split transactions based on list position.
+
+Option 1 was chosen because it reflects actual time-based spending behaviour.
+Using list position can produce misleading results when transactions are not evenly distributed over time, especially when all expenses fall within the same month.
+
 ### Future Improvements
 Possible future enhancements include:
 - adding category-specific statistics such as stats CATEGORY
 - allowing users to request statistics for a specified month
 - comparing statistics across months
 - presenting more detailed trend analysis
+- extending spending trend analysis to support multi-month comparisons or custom date ranges
 
 ---
 

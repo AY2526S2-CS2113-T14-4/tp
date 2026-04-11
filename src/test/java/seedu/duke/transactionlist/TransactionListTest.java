@@ -3,6 +3,9 @@ package seedu.duke.transactionlist;
 import org.junit.jupiter.api.Test;
 import seedu.duke.transaction.Expense;
 import seedu.duke.transaction.Transaction;
+
+import java.time.LocalDate;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -136,5 +139,41 @@ public class TransactionListTest {
         list.remove(1);
 
         assertEquals(expense3, list.get(1));
+    }
+
+    @Test
+    void getSpendingTrend_sameMonthExpenses_returnsNotEnoughData() {
+        TransactionList list = new TransactionList();
+        list.add(new Expense("food", 10.0, "", LocalDate.of(2026, 4, 10)));
+        list.add(new Expense("transport", 20.0, "", LocalDate.of(2026, 4, 10)));
+
+        assertEquals("Not enough data", list.getSpendingTrend());
+    }
+
+    @Test
+    void getSpendingTrend_laterMonthHigher_returnsIncreasing() {
+        TransactionList list = new TransactionList();
+        list.add(new Expense("food", 10.0, "", LocalDate.of(2026, 3, 10)));
+        list.add(new Expense("transport", 30.0, "", LocalDate.of(2026, 4, 10)));
+
+        assertEquals("Increasing", list.getSpendingTrend());
+    }
+
+    @Test
+    void getSpendingTrend_laterMonthLower_returnsDecreasing() {
+        TransactionList list = new TransactionList();
+        list.add(new Expense("food", 40.0, "", LocalDate.of(2026, 3, 10)));
+        list.add(new Expense("transport", 10.0, "", LocalDate.of(2026, 4, 10)));
+
+        assertEquals("Decreasing", list.getSpendingTrend());
+    }
+
+    @Test
+    void getSpendingTrend_equalMonthTotals_returnsStable() {
+        TransactionList list = new TransactionList();
+        list.add(new Expense("food", 20.0, "", LocalDate.of(2026, 3, 10)));
+        list.add(new Expense("transport", 20.0, "", LocalDate.of(2026, 4, 10)));
+
+        assertEquals("Stable", list.getSpendingTrend());
     }
 }
