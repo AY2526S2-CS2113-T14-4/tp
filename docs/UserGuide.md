@@ -327,7 +327,7 @@ Generates all pending transaction entries for every recurring template, up to to
 ### Filtering Transactions: `filter`
 Filters and displays only the transactions that fall within a specified date range.
 
-**Format**: `filter [from/YYYY-MM-DD] [to/YYYY-MM-DD]`
+**Format**: `filter from/YYYY-MM-DD to/YYYY-MM-DD`
 
 **Examples**:
 - `filter from/2026-01-01 to/2026-03-31` Displays all transactions from 1st January 2026 to 31st March 2026.
@@ -420,7 +420,7 @@ MoneyBagProMax automatically saves your transaction data in two text files, both
 | **List Recurring**     | `list-rec`                                                             | —                                            |
 | **Delete Recurring**   | `delete-rec INDEX`                                                     | `delete-rec 2`                               |
 | **Generate Recurring** | `gen-rec`                                                              | —                                            |
-| **Filter**             | `filter [from/YYYY-MM-DD] [to/YYYY-MM-DD]`                             | `filter from/2026-01-01 to/2026-03-31`       |
+| **Filter**             | `filter from/YYYY-MM-DD to/YYYY-MM-DD`                                 | `filter from/2026-01-01 to/2026-03-31`       |
 | **Export CSV**         | `export-csv FILEPATH`                                                  | `export-csv ~/transactions.csv`              |
 | **Export Data**        | `export-data FILEPATH`                                                 | `export-data ~/backup/transactions.txt`      |
 | **Exit**               | `exit`                                                                 | —                                            |
