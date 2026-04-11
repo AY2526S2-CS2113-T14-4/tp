@@ -141,9 +141,7 @@ class ParserTest {
         Parser parser = new Parser(new UndoRedoManager(), new RecurringTransactionList());
 
         String input = "filter from/ to/";
-        MoneyBagProMaxException exception = assertThrows(MoneyBagProMaxException.class, () -> {
-            parser.parse(input);
-        });
+        MoneyBagProMaxException exception = assertThrows(MoneyBagProMaxException.class, () -> parser.parse(input));
         assertTrue(exception.getMessage().contains("Missing 'from'"));
     }
 
@@ -152,9 +150,7 @@ class ParserTest {
         Parser parser = new Parser(new UndoRedoManager(), new RecurringTransactionList());
         String input = "filter from/31-12-2026 to/2026-12-31";
 
-        MoneyBagProMaxException exception = assertThrows(MoneyBagProMaxException.class, () -> {
-            parser.parse(input);
-        });
+        MoneyBagProMaxException exception = assertThrows(MoneyBagProMaxException.class, () -> parser.parse(input));
         assertTrue(exception.getMessage().contains("Invalid date format — expected YYYY-MM-DD."));
     }
 
@@ -163,9 +159,36 @@ class ParserTest {
         Parser parser = new Parser(new UndoRedoManager(), new RecurringTransactionList());
 
         String input = "filter from/2026-12-31 to/2026-01-01";
-        MoneyBagProMaxException exception = assertThrows(MoneyBagProMaxException.class, () -> {
-            parser.parse(input);
-        });
+        MoneyBagProMaxException exception = assertThrows(MoneyBagProMaxException.class, () -> parser.parse(input));
         assertTrue(exception.getMessage().contains("The 'from' date cannot be after the 'to' date!"));
+    }
+
+    @Test
+    public void parse_addWithExtraSpacesBetweenParams_returnsAddCommand() throws MoneyBagProMaxException {
+        Parser parser = new Parser(new UndoRedoManager(), new RecurringTransactionList());
+        Command command = parser.parse("add food/10  desc/test");
+        assertInstanceOf(AddCommand.class, command);
+    }
+
+    @Test
+    public void parse_addWithExtraSpacesBeforeDesc_returnsAddCommand() throws MoneyBagProMaxException {
+        Parser parser = new Parser(new UndoRedoManager(), new RecurringTransactionList());
+        Command command = parser.parse("add food/10   desc/lunch   d/2026-01-15");
+        assertInstanceOf(AddCommand.class, command);
+    }
+
+    @Test
+    public void parse_addWithLeadingAndTrailingSpaces_returnsAddCommand() throws MoneyBagProMaxException {
+        Parser parser = new Parser(new UndoRedoManager(), new RecurringTransactionList());
+        Command command = parser.parse("   add food/10 desc/test   ");
+        assertInstanceOf(AddCommand.class, command);
+    }
+
+    @Test
+    public void parse_commandWithExtraSpacesAfterCommandWord_returnsCorrectCommand()
+            throws MoneyBagProMaxException {
+        Parser parser = new Parser(new UndoRedoManager(), new RecurringTransactionList());
+        Command command = parser.parse("sort  by/date");
+        assertInstanceOf(SortCommand.class, command);
     }
 }
